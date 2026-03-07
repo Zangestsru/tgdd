@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Thêm Sản Phẩm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="url"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #fcb700;
+            border: none;
+            cursor: pointer;
+            color: #333;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #e6a700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        img.preview {
+            max-width: 50px;
+        }
+
+        .success {
+            color: green;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Quản Lý Sản Phẩm</h1>
+        <a href="/admin/categories"
+            style="padding: 10px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Cài
+            Đặt Các danh mục </a>
+    </div>
+
+    <div style="background: #eee; padding: 20px; border-radius: 8px;">
+        <h2>Thêm sản phẩm mới</h2>
+        <form id="addProductForm">
+            <div class="form-group">
+                <label>Tên sản phẩm:</label>
+                <input type="text" id="name" required placeholder="Ví dụ: Samsung Galaxy S24">
+            </div>
+
+            <div class="form-group">
+                <label>Chọn Hình ảnh từ máy tính:</label>
+                <input type="file" id="imageFile" accept="image/*" required onchange="previewImage()">
+                <div id="imagePreviewContainer" style="margin-top: 10px; display: none;">
+                    <img id="previewImg" src="" style="max-width: 150px; border-radius: 4px; border: 1px solid #ddd;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Giá hiện tại (đ):</label>
+                <input type="number" id="price" required placeholder="20000000">
+            </div>
+
+            <div class="form-group">
+                <label>Giá cũ (đ):</label>
+                <input type="number" id="oldPrice" placeholder="25000000">
+            </div>
+
+            <div class="form-group">
+                <label>Phần trăm giảm (%):</label>
+                <input type="number" id="discount" placeholder="20">
+            </div>
+
+            <div class="form-group">
+                <label>Loại danh mục :</label>
+                <select id="category" style="width: 100%; padding: 8px; box-sizing: border-box;">
+                    <!-- Categories will be dynamically loaded here by categories.js -->
+                </select>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                <input type="checkbox" id="promotion" style="width: 18px; height: 18px;">
+                <label for="promotion" style="margin-bottom: 0; color: #d00;">Sản phẩm Khuyến mãi (Flash Sale)</label>
+            </div>
+
+            <button type="submit">Thêm Sản Phẩm</button>
+            <div id="successMsg" class="success">Thêm thành công!</div>
+        </form>
+    </div>
+
+    <h2>Danh sách sản phẩm hiện có</h2>
+    <button onclick="clearAll()" style="background: red; color: white;">Xóa tất cả dữ liệu</button>
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>Hình</th>
+                <th>Tên</th>
+                <th>Giá</th>
+                <th>danh mục </th>
+                <th>Loại</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be here -->
+        </tbody>
+    </table>
+
+    <script th:src="@{/js/categories.js}"></script>
+    <script th:src="@{/js/products.js}"></script>
+    <script>
+        async function loadCategories() {
+            const select = document.getElementById('category');
+            select.innerHTML = ''; // clear
+
+            const grouped = await getGroupedCategories();
+
+            // Generate optgroups and options
+            for (let parent in grouped) {
+                const group = document.createElement('optgroup');
+                group.label = parent;
+
+                grouped[parent].forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.name;
+                    opt.innerText = c.name;
+                    group.appendChild(opt);
+                });
+
+                select.appendChild(group);
+            }
+        }
+
+        async function renderTable() {
+            const products = await getProducts();
+            const tbody = document.querySelector('#productTable tbody');
+            tbody.innerHTML = '';
+
+            products.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${p.image}" class="preview" alt=""></td>
+                    <td>${p.name}</td>
+                    <td>${Number(p.price).toLocaleString('vi-VN')}₫</td>
+                    <td>${p.category || 'Không rõ'}</td>
+                    <td><span style="color: ${p.promotion ? 'red' : 'inherit'}; font-weight: ${p.promotion ? 'bold' : 'normal'}">${p.promotion ? 'Khuyến mãi' : 'Thường'}</span></td>
+                    <td><button onclick="removeProduct(${p.id})">Xóa</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function removeProduct(id) {
+            if (confirm('Bạn có chắc muốn xóa?')) {
+                await deleteProduct(id);
+                renderTable();
+            }
+        }
+
+        async function clearAll() {
+            if (confirm('Xóa HẾT dữ liệu?')) {
+                // To really clear out, empty products in db
+                await fetch('/api/products/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: "[]" });
+                renderTable();
+            }
+        }
+
+        function previewImage() {
+            const fileInput = document.getElementById('imageFile');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const previewImg = document.getElementById('previewImg');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+            }
+        }
+
+        document.getElementById('addProductForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('imageFile');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function (event) {
+                    const product = {
+                        name: document.getElementById('name').value,
+                        image: event.target.result, // Base64 string
+                        price: document.getElementById('price').value,
+                        oldPrice: document.getElementById('oldPrice').value || 0,
+                        discount: document.getElementById('discount').value || 0,
+                        category: document.getElementById('category').value,
+                        promotion: document.getElementById('promotion').checked,
+                    };
+
+                    await addProduct(product);
+
+                    // Show success
+                    const msg = document.getElementById('successMsg');
+                    msg.style.display = 'block';
+                    setTimeout(() => msg.style.display = 'none', 3000);
+
+                    // Reset form and preview
+                    document.getElementById('addProductForm').reset();
+                    document.getElementById('imagePreviewContainer').style.display = 'none';
+                    renderTable();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Initial render
+        loadCategories();
+        renderTable();
+    </script>
+</body>
+
+</html>

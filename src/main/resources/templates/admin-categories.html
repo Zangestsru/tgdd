@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản Lý danh mục </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-link {
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button.btn-primary {
+            padding: 10px 20px;
+            background-color: #28a745;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        button.btn-primary:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+
+        .success {
+            color: green;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-actions">
+        <h1>Quản Lý danh mục Sản Phẩm</h1>
+        <a href="/admin" class="btn-link">Trở về Quản Lý Sản Phẩm</a>
+    </div>
+
+    <div class="form-container">
+        <h2 id="formTitle">Thêm danh mục mới</h2>
+        <form id="categoryForm">
+            <input type="hidden" id="catId">
+            <div class="form-group">
+                <label>Nhóm danh mục chính (VD: danh mục di động):</label>
+                <input type="text" id="parentName" required placeholder="Nhập nhóm danh mục ...">
+            </div>
+
+            <div class="form-group">
+                <label>Tên danh mục con (VD: Sạc dự phòng):</label>
+                <input type="text" id="name" required placeholder="Nhập tên danh mục ...">
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="showInAccessories" style="width: auto; margin:0;"
+                    onchange="document.getElementById('imageFormGroup').style.display = this.checked ? 'block' : 'none';">
+                <label for="showInAccessories" style="margin-bottom: 0;">Hiển thị ở mục Phụ kiện (hiển thị trên trang
+                    chủ)</label>
+            </div>
+
+            <div class="form-group" id="imageFormGroup" style="display: none; margin-top: 15px;">
+                <label>Hình ảnh danh mục (hiển thị trên trang chủ nếu chọn):</label>
+                <input type="file" id="imageInput" accept="image/*" style="border:none; padding:0;">
+                <input type="hidden" id="imageBase64">
+                <div style="margin-top: 10px;">
+                    <img id="imagePreview" src=""
+                        style="width: 50px; height: 50px; object-fit: cover; display: none; border: 1px solid #ddd; padding: 2px;">
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-primary">Thêm danh mục </button>
+            <button type="button" id="cancelBtn" class="btn-warning" style="display:none;"
+                onclick="resetForm()">Hủy</button>
+            <div id="successMsg" class="success">Thao tác thành công!</div>
+        </form>
+    </div>
+
+    <h2>Danh sách các loại danh mục </h2>
+    <table id="categoryTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nhóm danh mục </th>
+                <th>Tên danh mục </th>
+                <th width="150">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be here -->
+        </tbody>
+    </table>
+
+    <script th:src="@{/js/categories.js}"></script>
+    <script>
+        let isEditing = false;
+
+        async function renderTable() {
+            const categories = await getCategories();
+            const tbody = document.querySelector('#categoryTable tbody');
+            tbody.innerHTML = '';
+
+            // Sort by parent for better view
+            categories.sort((a, b) => a.parent.localeCompare(b.parent));
+
+            categories.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.id}</td>
+                    <td><strong>${c.parent}</strong></td>
+                    <td>
+                        ${c.name} <br> 
+                        <small style="color:gray">${c.showInAccessories ? '(Có ở Phụ kiện)' : ''}</small>
+                        ${c.image ? `<br><img src="${c.image}" style="width:30px;height:30px;object-fit:cover;border-radius:4px;margin-top:4px;border:1px solid #ccc;">` : ''}
+                    </td>
+                    <td>
+                        <button class="btn-warning" onclick="editCategory(${c.id}, '${c.parent}', '${c.name.replace(/'/g, "\\'")}', ${c.showInAccessories ? 'true' : 'false'}, '${c.image ? c.image : ''}')">Sửa</button>
+                        <button class="btn-danger" onclick="removeCategory(${c.id})">Xóa</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function removeCategory(id) {
+            if (confirm('Bạn có chắc muốn xóa danh mục  này?')) {
+                await deleteCategory(id);
+                renderTable();
+            }
+        }
+
+        // Handle image selection
+        document.getElementById('imageInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            const base64Input = document.getElementById('imageBase64');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    base64Input.value = event.target.result;
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                base64Input.value = '';
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+        });
+
+        function editCategory(id, parent, name, showInAccessories, imageBase64) {
+            isEditing = true;
+            document.getElementById('formTitle').innerText = "Cập nhật danh mục ";
+            document.getElementById('submitBtn').innerText = "Cập nhật";
+            document.getElementById('cancelBtn').style.display = "inline-block";
+
+            document.getElementById('catId').value = id;
+            document.getElementById('parentName').value = parent;
+            document.getElementById('name').value = name;
+            document.getElementById('showInAccessories').checked = showInAccessories;
+
+            const imageFormGroup = document.getElementById('imageFormGroup');
+            const base64Input = document.getElementById('imageBase64');
+            const preview = document.getElementById('imagePreview');
+
+            imageFormGroup.style.display = showInAccessories ? 'block' : 'none';
+            base64Input.value = imageBase64 || '';
+            if (imageBase64) {
+                preview.src = imageBase64;
+                preview.style.display = 'block';
+            } else {
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            isEditing = false;
+            document.getElementById('formTitle').innerText = "Thêm danh mục  mới";
+            document.getElementById('submitBtn').innerText = "Thêm danh mục ";
+            document.getElementById('cancelBtn').style.display = "none";
+            document.getElementById('categoryForm').reset();
+            document.getElementById('catId').value = "";
+            document.getElementById('showInAccessories').checked = false;
+            document.getElementById('imageFormGroup').style.display = 'none';
+            document.getElementById('imageBase64').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('imagePreview').src = '';
+        }
+
+        document.getElementById('categoryForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const parent = document.getElementById('parentName').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const id = document.getElementById('catId').value;
+            const showInAccessories = document.getElementById('showInAccessories').checked;
+            const image = document.getElementById('imageBase64').value; // Get Base64 image data
+
+            if (isEditing) {
+                await updateCategory(id, { parent: parent, name: name, showInAccessories: showInAccessories, image: image });
+            } else {
+                await addCategory({ parent: parent, name: name, showInAccessories: showInAccessories, image: image });
+            }
+
+            // Show success
+            const msg = document.getElementById('successMsg');
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+
+            resetForm();
+            renderTable();
+        });
+
+        // Initial render
+        renderTable();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kết quả</title>
+</head>
+<body>
+<h1 th:text="${message}"></h1>
+
+<h2>Danh Sách Sinh Viên</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>STT</th>
+        <th>Tên</th>
+        <th>Tuổi</th>
+        <th>Khoa</th>
+    </tr>
+    <tr th:each="sv, iterStat : ${danhSachSinhVien}">
+        <td th:text="${iterStat.count}">1</td>
+        <td th:text="${sv.ten}">Tên</td>
+        <td th:text="${sv.tuoi}">Tuổi</td>
+        <td th:text="${sv.khoa}">Khoa</td>
+    </tr>
+</table>
+
+<br>
+<a href="/sinhvien" style="padding: 10px 20px; background: #2d5016; color: white; text-decoration: none; border-radius: 4px;">
+     Thêm Sinh Viên Mới
+</a>
+</body>
+</html>

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLume - Where Nature Meets Innovation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/tooplate-eco-lume.css" rel="stylesheet">
+<!--
+
+Tooplate 2145 Eco Lume
+
+https://www.tooplate.com/view/2145-eco-lume
+
+Free HTML CSS Template
+
+-->
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bio-bg"></div>
+    <div class="organic-shapes">
+        <div class="leaf leaf-1"></div>
+        <div class="leaf leaf-2"></div>
+        <div class="leaf leaf-3"></div>
+    </div>
+    <div class="particle-system" id="particleSystem"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <div class="logo-icon"></div>
+                <span class="logo-text">EcoLume</span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Where Nature Meets Innovation</h1>
+                <p>Harness the power of bio-inspired technology to create sustainable solutions for tomorrow. Join the green revolution that's reshaping our digital future.</p>
+                <div class="hero-buttons">
+                    <a href="#features" class="btn btn-primary">
+                        🌱 Explore Solutions
+                    </a>
+                    <a href="#about" class="btn btn-secondary">
+                        📖 Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="bio-sphere">
+                    <div class="rotating-text">
+                        <div class="text-circle active">BIO • TECH</div>
+                        <div class="text-circle">ECO • FUTURE</div>
+                        <div class="text-circle">GREEN • INNOVATION</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Sinh Viên Section -->
+    <style>
+        .sv-card {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .sv-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+        }
+        .sv-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(45, 80, 22, 0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #1a3a0d;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .sv-input:focus {
+            border-color: #4a7c23;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(74, 124, 35, 0.15), 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .sv-input::placeholder {
+            color: #888;
+        }
+        .sv-label {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sv-btn {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #4a7c23 0%, #2d5016 100%);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(45, 80, 22, 0.4);
+            font-family: 'Inter', sans-serif;
+        }
+        .sv-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(45, 80, 22, 0.5);
+            background: linear-gradient(135deg, #5a8c33 0%, #3d6b1e 100%);
+        }
+        .sv-btn:active {
+            transform: translateY(-1px);
+        }
+        .sv-title {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .sv-title-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #4a7c23, #2d5016);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(45, 80, 22, 0.3);
+        }
+        .sv-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .sv-table thead tr {
+            background: linear-gradient(135deg, #4a7c23, #2d5016);
+        }
+        .sv-table th {
+            padding: 16px 14px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .sv-table tbody tr {
+            background: rgba(255, 255, 255, 0.95);
+            transition: all 0.2s ease;
+        }
+        .sv-table tbody tr:nth-child(even) {
+            background: rgba(248, 255, 254, 0.95);
+        }
+        .sv-table tbody tr:hover {
+            background: rgba(74, 124, 35, 0.1);
+        }
+        .sv-table td {
+            padding: 14px;
+            color: #333;
+            border-bottom: 1px solid rgba(45, 80, 22, 0.1);
+        }
+        .sv-message {
+            background: linear-gradient(135deg, rgba(74, 124, 35, 0.2), rgba(45, 80, 22, 0.1));
+            border: 1px solid rgba(74, 124, 35, 0.3);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: #b8e986;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sv-message::before {
+            content: "✓";
+            width: 24px;
+            height: 24px;
+            background: #4a7c23;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        .sv-empty {
+            text-align: center;
+            padding: 50px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+        .sv-empty-icon {
+            font-size: 3.5rem;
+            margin-bottom: 18px;
+            opacity: 0.7;
+        }
+        .sv-empty-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin: 0;
+        }
+        .sv-empty-hint {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        .form-group {
+            margin-bottom: 22px;
+        }
+        .sv-action-btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .sv-btn-edit {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        .sv-btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        .sv-btn-delete {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        .sv-btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        .sv-btn-cancel {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            margin-left: 10px;
+        }
+        .sv-btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+        }
+        .sv-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 14px 20px;
+            color: #fca5a5;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+    </style>
+    
+    <section class="form-sinhvien-container" xmlns:th="http://www.thymeleaf.org" style="display: flex; gap: 35px; padding: 80px 30px; margin: 0 auto; max-width: 1000px; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
+        
+        <!-- Form bên trái -->
+        <div class="sv-card" style="flex: 1; min-width: 340px; max-width: 420px;">
+            <h1 class="sv-title">
+                <span class="sv-title-icon" th:text="${isEdit} ? 'Edit' : 'Add'">Add</span>
+                <span th:text="${isEdit} ? 'Sửa Sinh Viên' : 'Thêm Sinh Viên'">Thêm Sinh Viên</span>
+            </h1>
+            <form th:action="${isEdit} ? '/sinhvien/update' : '/sinhvien'" method="post">
+                <input type="hidden" name="id" th:value="${sinhVien.id}">
+                <div class="form-group">
+                    <label class="sv-label">
+                        Họ và tên
+                    </label>
+                    <input type="text" id="ten" name="ten" class="sv-input" 
+                           th:value="${sinhVien.ten}"
+                           placeholder="Nhập họ tên đầy đủ" required>
+                </div>
+                <div class="form-group">
+                    <label class="sv-label">
+                        Tuổi
+                    </label>
+                    <input type="number" id="tuoi" name="tuoi" class="sv-input" 
+                           th:value="${sinhVien.tuoi != 0} ? ${sinhVien.tuoi} : ''"
+                           placeholder="Nhập tuổi" min="18" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label class="sv-label">
+                        Khoa
+                    </label>
+                    <input type="text" id="khoa" name="khoa" class="sv-input" 
+                           th:value="${sinhVien.khoa}"
+                           placeholder="VD: CNTT, Kindte, Ykhoa" required>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <button type="submit" class="sv-btn" style="flex: 1;">
+                        <span th:text="${isEdit} ? 'Cập Nhật' : 'Thêm Sinh Viên'">Thêm Sinh Viên</span>
+                    </button>
+                    <a th:if="${isEdit}" href="/sinhvien" class="sv-action-btn sv-btn-cancel">Hủy</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Danh sách bên phải -->
+        <div class="sv-card" style="flex: 1; min-width: 340px; max-width: 500px;">
+            <h2 class="sv-title">
+                <span class="sv-title-icon">List</span>
+                Danh Sách Sinh Viên
+            </h2>
+            
+            <div th:if="${message}" class="sv-message" th:text="${message}"></div>
+            <div th:if="${error}" class="sv-error" th:text="${error}"></div>
+            
+            <div th:if="${danhSachSinhVien != null and !danhSachSinhVien.isEmpty()}">
+                <table class="sv-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; width: 50px;">#</th>
+                            <th style="text-align: left;">Họ tên</th>
+                            <th style="text-align: center; width: 60px;">Tuổi</th>
+                            <th style="text-align: left;">Khoa</th>
+                            <th style="text-align: center; width: 130px;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sv, iterStat : ${danhSachSinhVien}">
+                            <td style="text-align: center; font-weight: 600; color: #4a7c23;" th:text="${iterStat.count}">1</td>
+                            <td th:text="${sv.ten}">Tên</td>
+                            <td style="text-align: center;" th:text="${sv.tuoi}">20</td>
+                            <td th:text="${sv.khoa}">Khoa</td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a th:href="@{/sinhvien/edit(id=${sv.id})}" class="sv-action-btn sv-btn-edit">Sửa</a>
+                                    <a th:href="@{/sinhvien/delete(id=${sv.id})}" class="sv-action-btn sv-btn-delete" onclick="return confirm('Bạn có chắc muốn xóa sinh viên này?');">Xóa</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="text-align: center; color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: 15px;">
+                    Tổng: <span th:text="${#lists.size(danhSachSinhVien)}">0</span> sinh viên
+                </p>
+            </div>
+            
+            <div th:if="${danhSachSinhVien == null or danhSachSinhVien.isEmpty()}" class="sv-empty">
+                <div class="sv-empty-icon">Empty</div>
+                <p class="sv-empty-text">Chưa có sinh viên nào</p>
+                <p class="sv-empty-hint">Điền form bên trái để thêm sinh viên đầu tiên!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>98%</h3>
+                <p>Energy Efficiency</p>
+            </div>
+            <div class="stat-item">
+                <h3>2.5M+</h3>
+                <p>Carbon Tons Saved</p>
+            </div>
+            <div class="stat-item">
+                <h3>150+</h3>
+                <p>Partner Companies</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Ecosystem Monitoring</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Bio-Tech Innovation Hub</h2>
+        <div class="features-showcase">
+            <div class="feature-navigation">
+                <div class="nav-item active" data-feature="ecosystems">
+                    <div class="nav-item-icon">🌿</div>
+                    <div class="nav-item-content">
+                        <h4>Smart Ecosystems</h4>
+                        <p>AI-powered environmental monitoring</p>
+                    </div>
+                </div>
+                <div class="nav-item" data-feature="circular">
+                    <div class="nav-item-icon">♻️</div>
+                    <div class="nav-item-content">
+                        <h4>Circular Systems</h4>
+                        <p>Zero-waste technology loops</p>
+                    </div>
+                </div>
+                <div class="nav-item" data-feature="bioenergy">
+                    <div class="nav-item-icon">🔋</div>
+                    <div class="nav-item-content">
+                        <h4>Bio Energy</h4>
+                        <p>Nature-inspired power solutions</p>
+                    </div>
+                </div>
+                <div class="nav-item" data-feature="networks">
+                    <div class="nav-item-icon">🌊</div>
+                    <div class="nav-item-content">
+                        <h4>Fluid Networks</h4>
+                        <p>Adaptive communication systems</p>
+                    </div>
+                </div>
+                <div class="nav-item" data-feature="architecture">
+                    <div class="nav-item-icon">🧬</div>
+                    <div class="nav-item-content">
+                        <h4>Adaptive Architecture</h4>
+                        <p>Self-healing infrastructure</p>
+                    </div>
+                </div>
+                <div class="nav-item" data-feature="symbiosis">
+                    <div class="nav-item-icon">🌍</div>
+                    <div class="nav-item-content">
+                        <h4>Global Symbiosis</h4>
+                        <p>Worldwide eco-networks</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-display">
+                <div class="feature-panel active" id="ecosystems">
+                    <div class="feature-visual">🌱</div>
+                    <h3>Smart Ecosystems</h3>
+                    <p>Revolutionary AI-powered environmental monitoring that learns from nature's patterns to optimize resource usage and predict ecological changes with unprecedented accuracy. Looking to save time? Check out <a href="https://timermo.com" rel="nofollow" target="_blank">TimerMo</a> for innovative timer solutions. Elevate your designs with premium vector stickers from <a href="https://www.vectorsticker.com" rel="nofollow" target="_blank">VectorSticker</a>.</p>
+                    <div class="feature-benefits">
+                        <div class="benefit-item">
+                            <h5>⚡ Real-time Monitoring</h5>
+                            <p>Continuous ecosystem health tracking with millisecond response times</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🧠 Predictive Analytics</h5>
+                            <p>AI models predict environmental changes up to 30 days in advance</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🔗 Interconnected Systems</h5>
+                            <p>Seamless integration across multiple environmental data sources</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>📊 Impact Visualization</h5>
+                            <p>Beautiful dashboards showing ecosystem health and trends</p>
+                        </div>
+                    </div>
+                    <a href="#" class="feature-cta">Explore Ecosystems →</a>
+                </div>
+                
+                <div class="feature-panel" id="circular">
+                    <div class="feature-visual">♻️</div>
+                    <h3>Circular Systems</h3>
+                    <p>Zero-waste technology loops that mimic natural cycles, ensuring every resource is reused and nothing goes to waste. Built for infinite sustainability.</p>
+                    <div class="feature-benefits">
+                        <div class="benefit-item">
+                            <h5>🔄 Complete Recycling</h5>
+                            <p>100% resource recovery and reuse in closed-loop systems</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>⚖️ Material Balance</h5>
+                            <p>Perfect equilibrium between input and output materials</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🎯 Waste Elimination</h5>
+                            <p>Advanced processing eliminates all forms of waste byproducts</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>💰 Cost Reduction</h5>
+                            <p>Significant savings through resource optimization and reuse</p>
+                        </div>
+                    </div>
+                    <a href="#" class="feature-cta">Discover Cycles →</a>
+                </div>
+                
+                <div class="feature-panel" id="bioenergy">
+                    <div class="feature-visual">⚡</div>
+                    <h3>Bio Energy</h3>
+                    <p>Renewable energy solutions inspired by photosynthesis and natural energy conversion processes, delivering sustainable power with maximum efficiency.</p>
+                    <div class="feature-benefits">
+                        <div class="benefit-item">
+                            <h5>🌞 Solar Efficiency</h5>
+                            <p>Bio-inspired solar cells with 45% higher efficiency rates</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🔋 Energy Storage</h5>
+                            <p>Organic batteries that store energy like plant cells</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🌱 Self-Regeneration</h5>
+                            <p>Systems that repair and optimize themselves automatically</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🌍 Carbon Negative</h5>
+                            <p>Energy production that actually removes CO2 from atmosphere</p>
+                        </div>
+                    </div>
+                    <a href="#" class="feature-cta">Power the Future →</a>
+                </div>
+                
+                <div class="feature-panel" id="networks">
+                    <div class="feature-visual">🌊</div>
+                    <h3>Fluid Networks</h3>
+                    <p>Adaptive communication systems that flow like water, automatically routing around disruptions and optimizing connectivity in real-time.</p>
+                    <div class="feature-benefits">
+                        <div class="benefit-item">
+                            <h5>🔄 Auto-Routing</h5>
+                            <p>Intelligent pathfinding around network disruptions</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>⚡ Ultra-Low Latency</h5>
+                            <p>Sub-millisecond response times across global networks</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🛡️ Self-Healing</h5>
+                            <p>Networks repair themselves without human intervention</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>📈 Dynamic Scaling</h5>
+                            <p>Bandwidth adjusts automatically to demand patterns</p>
+                        </div>
+                    </div>
+                    <a href="#" class="feature-cta">Connect Now →</a>
+                </div>
+                
+                <div class="feature-panel" id="architecture">
+                    <div class="feature-visual">🧬</div>
+                    <h3>Adaptive Architecture</h3>
+                    <p>Self-healing and evolving infrastructure that grows and adapts like living organisms to meet changing needs and environmental conditions.</p>
+                    <div class="feature-benefits">
+                        <div class="benefit-item">
+                            <h5>🔧 Self-Repair</h5>
+                            <p>Materials that automatically fix damage and wear</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>📏 Dynamic Scaling</h5>
+                            <p>Infrastructure expands and contracts based on usage</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🌡️ Climate Adaptation</h5>
+                            <p>Responds intelligently to weather and seasonal changes</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🧬 Evolutionary Growth</h5>
+                            <p>Systems improve and evolve through machine learning</p>
+                        </div>
+                    </div>
+                    <a href="#" class="feature-cta">Build Tomorrow →</a>
+                </div>
+                
+                <div class="feature-panel" id="symbiosis">
+                    <div class="feature-visual">🌍</div>
+                    <h3>Global Symbiosis</h3>
+                    <p>Worldwide network of interconnected eco-systems working in harmony to balance technology and environmental health across all continents.</p>
+                    <div class="feature-benefits">
+                        <div class="benefit-item">
+                            <h5>🌐 Global Coverage</h5>
+                            <p>Connected ecosystems spanning all seven continents</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>⚖️ Perfect Balance</h5>
+                            <p>Technology and nature in complete equilibrium</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🤝 Collaborative AI</h5>
+                            <p>Systems that work together for planetary health</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h5>🌱 Regenerative Impact</h5>
+                            <p>Networks that actively restore damaged ecosystems</p>
+                        </div>
+                    </div>
+                    <a href="#" class="feature-cta">Join the Network →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2 class="section-title">About EcoLume</h2>
+        
+        <!-- First Row: Animation Left, Text Right -->
+        <div class="about-content">
+            <div class="about-visual">
+                <div class="eco-visualization">
+                    <div class="growth-rings">
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-text">
+                <h2>Growing Tomorrow's Solutions</h2>
+                <p>EcoLume represents a paradigm shift in how we approach technology. By studying nature's 3.8 billion years of R&D, we've developed solutions that are not just sustainable, but regenerative.</p>
+                <p>Our bio-inspired systems don't just minimize environmental impact—they actively contribute to ecological restoration while delivering unprecedented performance and efficiency.</p>
+                <p>From neural networks inspired by mycelial connections to energy systems that mimic photosynthesis, we're building a future where technology and nature work in perfect harmony. Get organized and stay on track with <a href="https://timermo.com" rel="nofollow" target="_blank">TimerMo</a> today. Browse thousands of stunning vector stickers at <a href="https://www.vectorsticker.com" rel="nofollow" target="_blank">VectorSticker</a> to enhance your designs.</p>
+            </div>
+        </div>
+        
+        <!-- Second Row: Text Left, Animation Right -->
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Innovation Through Biomimicry</h2>
+                <p>Our breakthrough approach combines cutting-edge biotechnology with advanced AI to create solutions that evolve and adapt like living organisms. Each system learns, grows, and improves over time.</p>
+                <p>We've pioneered revolutionary techniques in molecular computing, self-healing materials, and distributed intelligence networks that mirror the resilience and efficiency found in natural ecosystems.</p>
+                <p>Join us in redefining what's possible when human ingenuity meets nature's wisdom. Together, we're not just building technology—we're cultivating a sustainable future for generations to come.</p>
+            </div>
+            <div class="about-visual">
+                <div class="network-visualization">
+                    <div class="network-node"></div>
+                    <div class="network-node"></div>
+                    <div class="network-node"></div>
+                    <div class="network-node"></div>
+                    <div class="network-node"></div>
+                    <div class="network-connection connection-1"></div>
+                    <div class="network-connection connection-2"></div>
+                    <div class="network-connection connection-3"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="contact-container">
+            <div class="contact-form">
+                <h2 class="section-title" style="text-align: left; margin-bottom: 40px; font-size: 2.5rem;">Let's Grow Together</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <input type="text" id="company" name="company">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Tell us about your sustainability goals..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn"> Send Message</button>
+                </form>
+            </div>
+            <div class="contact-info">
+                <h3>Connect With Nature</h3>
+                <div class="contact-item">
+                    <div class="contact-icon"></div>
+                    <div class="contact-details">
+                        <h4>Email</h4>
+                        <p>hello@ecolume.earth</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"></div>
+                    <div class="contact-details">
+                        <h4>Phone</h4>
+                        <p>+1 (555) ECO-TECH</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"></div>
+                    <div class="contact-details">
+                        <h4>Location</h4>
+                        <p>Green Valley, CA 94043</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"></div>
+                    <div class="contact-details">
+                        <h4>Support</h4>
+                        <p>24/7 Global Coverage</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>EcoLume</h3>
+                <p>Leading the bio-tech revolution with sustainable, nature-inspired solutions for a regenerative future.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"></a>
+                    <a href="#" class="social-link"></a>
+                    <a href="#" class="social-link"></a>
+                    <a href="#" class="social-link"></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Solutions</h4>
+                <ul>
+                    <li><a href="#">Smart Ecosystems</a></li>
+                    <li><a href="#">Bio Energy</a></li>
+                    <li><a href="#">Circular Systems</a></li>
+                    <li><a href="#">Global Network</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Research Papers</a></li>
+                    <li><a href="#">API Reference</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press Kit</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 EcoLume. Harmonizing technology with nature. All rights reserved.</p>
+            <span>•</span>
+            <p>Designed by <a href="https://www.tooplate.com" target="_blank" rel="nofollow noopener">Tooplate</a></p>
+        </div>
+    </footer>
+<script src="/tooplate-eco-scripts.js"></script>
+</body>
+</html>
