@@ -28181,7 +28181,7 @@ body-theme-lunaryear
                 grouped[parent].forEach(c => {
                     let a = document.createElement('a');
                     a.href = "javascript:void(0);";
-                    let imgSrc = c.image ? c.image : "https://cdnv2.tgdd.vn/mwg-static/common/Common/01/d1/01d140b8ea3be3cdbf4b99299fd14969.png";
+                    let imgSrc = c.imageurl ? c.imageurl : (c.image ? c.image : "https://cdnv2.tgdd.vn/mwg-static/common/Common/01/d1/01d140b8ea3be3cdbf4b99299fd14969.png");
                     a.innerHTML = `<img class="lazy-menu" src="${imgSrc}" alt="thumb menu" width="25px" style="object-fit:cover; height: 25px; border-radius: 4px;">
                                    <h3>${c.name}</h3>`;
                     targetCol.appendChild(a);
