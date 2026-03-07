@@ -28055,6 +28055,32 @@ body-theme-lunaryear
 
             const products = await getProducts();
 
+            // --- GIỎ HÀNG LOGIC ---
+            window.addToCart = function (productId) {
+                const product = products.find(p => p.id == productId);
+                if (!product) return;
+
+                const CART_KEY = 'tgdd_cart';
+                let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+
+                let found = cart.find(item => item.id == productId);
+                if (found) {
+                    found.quantity = (found.quantity || 1) + 1;
+                } else {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        oldPrice: product.oldPrice,
+                        image: product.image,
+                        quantity: 1
+                    });
+                }
+
+                localStorage.setItem(CART_KEY, JSON.stringify(cart));
+                window.location.href = '/cart';
+            };
+
             if (flashSaleContainer) {
                 flashSaleContainer.innerHTML = '';
                 flashSaleContainer.classList.remove('slick-initialized', 'slick-slider', 'slick-dotted');
@@ -28081,7 +28107,7 @@ body-theme-lunaryear
                                 </strong>
                             </a>
                             <div class="btn-buy">
-                                <a href="#" class="buy-now">Mua ngay</a>
+                                <a href="javascript:void(0)" class="buy-now" onclick="addToCart(${p.id})">Mua ngay</a>
                             </div>
                         </div>
                     `;
@@ -28105,13 +28131,14 @@ body-theme-lunaryear
                     regularProducts.forEach(p => {
                         const itemHtml = `
                             <li class="item" data-id="${p.id}" style="width: calc(16.66% - 15px); min-width: 170px; border: 1px solid #eee; border-radius: 8px; padding: 10px; background: #fff;">
-                                <a href="${p.link || '#'}" class="main-contain" style="text-decoration: none; color: #333;">
+                                <div class="main-contain" style="text-decoration: none; color: #333; cursor: pointer;" onclick="addToCart(${p.id})">
                                     <div class="item-img">
                                         <img src="${p.image}" class="lazyload" alt="${p.name}" width="100%" style="display: block; border-radius: 4px;">
                                     </div>
                                     <h3 style="font-size: 14px; margin: 10px 0; height: 40px; overflow: hidden;">${p.name}</h3>
-                                    <strong class="price" style="color: #d0021b; font-size: 16px;">${formatCurrency(p.price)}</strong>
-                                </a>
+                                    <strong class="price" style="color: #d0021b; font-size: 14px; display: block;">${formatCurrency(p.price)}</strong>
+                                    <button style="width:100%; border:1px solid #288ad6; color:#288ad6; background:none; padding:5px; border-radius:4px; margin-top:10px; cursor:pointer;">Mua ngay</button>
+                                </div>
                             </li>
                         `;
                         listUl.insertAdjacentHTML('beforeend', itemHtml);

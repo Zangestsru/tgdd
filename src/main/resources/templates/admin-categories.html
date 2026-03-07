@@ -125,12 +125,12 @@
         <form id="categoryForm">
             <input type="hidden" id="catId">
             <div class="form-group">
-                <label>Nhóm danh mục chính (VD: danh mục di động):</label>
-                <input type="text" id="parentName" required placeholder="Nhập nhóm danh mục ...">
+                <label>Nhóm danh mục (Để trống nếu tạo danh mục chính):</label>
+                <input type="text" id="parentName" placeholder="Nhập nhóm danh mục ...">
             </div>
 
             <div class="form-group">
-                <label>Tên danh mục con (VD: Sạc dự phòng):</label>
+                <label>Tên danh mục (Chính hoặc Con):</label>
                 <input type="text" id="name" required placeholder="Nhập tên danh mục ...">
             </div>
 
@@ -144,7 +144,6 @@
             <div class="form-group" id="imageFormGroup" style="display: none; margin-top: 15px;">
                 <label>Hình ảnh danh mục (hiển thị trên trang chủ nếu chọn):</label>
                 <input type="file" id="imageInput" accept="image/*" style="border:none; padding:0;">
-                <input type="hidden" id="imageBase64">
                 <div style="margin-top: 10px;">
                     <img id="imagePreview" src=""
                         style="width: 50px; height: 50px; object-fit: cover; display: none; border: 1px solid #ddd; padding: 2px;">
@@ -182,16 +181,44 @@
             const tbody = document.querySelector('#categoryTable tbody');
             tbody.innerHTML = '';
 
-            // Sort by parent for better view
-            categories.sort((a, b) => (a.parent || '').localeCompare(b.parent || ''));
-
+            // Group by parent hierarchically
+            const groups = {};
             categories.forEach(c => {
+                const parentName = c.parent || c.name;
+                if (!groups[parentName]) {
+                    groups[parentName] = { main: null, children: [] };
+                }
+                if (!c.parent) {
+                    groups[parentName].main = c;
+                } else {
+                    groups[parentName].children.push(c);
+                }
+            });
+
+            // Flatten into sorted array: Parent followed by its children
+            const sortedCategories = [];
+            const sortedGroupNames = Object.keys(groups).sort((a, b) => a.localeCompare(b));
+
+            sortedGroupNames.forEach(gn => {
+                const group = groups[gn];
+                if (group.main) sortedCategories.push(group.main);
+
+                // Sort children by name
+                group.children.sort((a, b) => a.name.localeCompare(b.name));
+                sortedCategories.push(...group.children);
+            });
+
+            sortedCategories.forEach(c => {
+                const isMain = !c.parent;
                 const tr = document.createElement('tr');
+                if (!isMain) {
+                    tr.style.backgroundColor = '#fafafa';
+                }
                 tr.innerHTML = `
                     <td>${c.id}</td>
                     <td><strong>${c.parent || '<em style="color:#999">Danh mục chính</em>'}</strong></td>
-                    <td>
-                        ${c.name} <br> 
+                    <td style="${isMain ? 'font-weight:bold;' : 'padding-left: 20px;'}">
+                        ${isMain ? '' : '— '} ${c.name} <br> 
                         <small style="color:gray">${c.showInAccessories ? '(Có ở Phụ kiện)' : ''}</small>
                         ${c.image ? `<br><img src="${c.image}" style="width:30px;height:30px;object-fit:cover;border-radius:4px;margin-top:4px;border:1px solid #ccc;">` : ''}
                     </td>
@@ -211,22 +238,19 @@
             }
         }
 
-        // Handle image selection
+        // Handle image selection preview
         document.getElementById('imageInput').addEventListener('change', function (e) {
             const file = e.target.files[0];
             const preview = document.getElementById('imagePreview');
-            const base64Input = document.getElementById('imageBase64');
 
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (event) {
-                    base64Input.value = event.target.result;
                     preview.src = event.target.result;
                     preview.style.display = 'block';
                 }
                 reader.readAsDataURL(file);
             } else {
-                base64Input.value = '';
                 preview.src = '';
                 preview.style.display = 'none';
             }
@@ -244,11 +268,11 @@
             document.getElementById('showInAccessories').checked = showInAccessories;
 
             const imageFormGroup = document.getElementById('imageFormGroup');
-            const base64Input = document.getElementById('imageBase64');
             const preview = document.getElementById('imagePreview');
 
             imageFormGroup.style.display = showInAccessories ? 'block' : 'none';
-            base64Input.value = imageBase64 || '';
+            // Clear input so it doesn't upload old file if un-edited
+            document.getElementById('imageInput').value = '';
             if (imageBase64) {
                 preview.src = imageBase64;
                 preview.style.display = 'block';
@@ -269,7 +293,6 @@
             document.getElementById('catId').value = "";
             document.getElementById('showInAccessories').checked = false;
             document.getElementById('imageFormGroup').style.display = 'none';
-            document.getElementById('imageBase64').value = '';
             document.getElementById('imagePreview').style.display = 'none';
             document.getElementById('imagePreview').src = '';
         }
@@ -277,26 +300,74 @@
         document.getElementById('categoryForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const parent = document.getElementById('parentName').value.trim();
-            const name = document.getElementById('name').value.trim();
-            const id = document.getElementById('catId').value;
-            const showInAccessories = document.getElementById('showInAccessories').checked;
-            const image = document.getElementById('imageBase64').value; // Get Base64 image data
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Đang lưu...';
 
-            if (isEditing) {
-                await updateCategory(id, { parent: parent, name: name, showInAccessories: showInAccessories, image: image });
-            } else {
-                await addCategory({ parent: parent, name: name, showInAccessories: showInAccessories, image: image });
+            try {
+                const parent = document.getElementById('parentName').value.trim();
+                const name = document.getElementById('name').value.trim();
+                const id = document.getElementById('catId').value;
+                const showInAccessories = document.getElementById('showInAccessories').checked;
+
+                // Handle image upload
+                const fileInput = document.getElementById('imageInput');
+                const file = fileInput.files[0];
+                let imageUrl = '';
+
+                if (file && showInAccessories) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const uploadRes = await fetch('/api/products/upload-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!uploadRes.ok) {
+                        throw new Error('Upload ảnh thất bại');
+                    }
+                    const uploadData = await uploadRes.json();
+                    imageUrl = uploadData.url;
+                } else if (isEditing) {
+                    // if editing and no new file, preserve existing image shown in preview
+                    const preview = document.getElementById('imagePreview');
+                    if (preview.src && preview.src.startsWith('http')) {
+                        // it's a previously saved URL
+                        const urlObj = new URL(preview.src);
+                        imageUrl = urlObj.pathname;
+                    } else if (preview.src && preview.src.startsWith('data:')) {
+                        // shouldn't normally happen since we cleared it, but just in case
+                    } else if (document.getElementById('imagePreview').style.display !== 'none') {
+                        // Extract relative path from preview img if possible
+                        imageUrl = preview.getAttribute('src');
+                    }
+                }
+
+                const payload = { parent: parent, name: name, showInAccessories: showInAccessories, image: imageUrl };
+
+                if (isEditing) {
+                    await updateCategory(id, payload);
+                } else {
+                    await addCategory(payload);
+                }
+
+                // Show success
+                const msg = document.getElementById('successMsg');
+                msg.style.display = 'block';
+                setTimeout(() => msg.style.display = 'none', 3000);
+
+                resetForm();
+                renderTable();
+            } catch (err) {
+                alert('Có lỗi xảy ra: ' + err.message);
+                console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
             }
-
-            // Show success
-            const msg = document.getElementById('successMsg');
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
-
-            resetForm();
-            renderTable();
         });
+
+
 
         // Initial render
         renderTable();

@@ -21,7 +21,7 @@ public class Category {
     @Column(name = "parentId")
     private Long parentId;
 
-    @Column(name = "imageurl", columnDefinition = "VARCHAR(500)")
+    @Column(name = "imageurl", columnDefinition = "LONGTEXT")
     private String imageurl;
 
     private Boolean showInAccessories;
