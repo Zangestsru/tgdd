@@ -92,7 +92,7 @@
 
             <div class="form-group">
                 <label>Chọn Hình ảnh từ máy tính:</label>
-                <input type="file" id="imageFile" accept="image/*" required onchange="previewImage()">
+                <input type="file" id="imageFile" accept="image/*" onchange="previewImage()">
                 <div id="imagePreviewContainer" style="margin-top: 10px; display: none;">
                     <img id="previewImg" src="" style="max-width: 150px; border-radius: 4px; border: 1px solid #ddd;">
                 </div>
@@ -228,35 +228,69 @@
         document.getElementById('addProductForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            const submitBtn = document.querySelector('#addProductForm button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Đang lưu...';
+
             const fileInput = document.getElementById('imageFile');
             const file = fileInput.files[0];
+            let imageUrl = '';
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = async function (event) {
-                    const product = {
-                        name: document.getElementById('name').value,
-                        image: event.target.result, // Base64 string
-                        price: document.getElementById('price').value,
-                        oldPrice: document.getElementById('oldPrice').value || 0,
-                        discount: document.getElementById('discount').value || 0,
-                        category: document.getElementById('category').value,
-                        promotion: document.getElementById('promotion').checked,
-                    };
+            try {
+                // Step 1: Upload image file if selected
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const uploadRes = await fetch('/api/products/upload-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (!uploadRes.ok) {
+                        const err = await uploadRes.json().catch(() => ({}));
+                        throw new Error('Upload ảnh thất bại: ' + (err.error || uploadRes.status));
+                    }
+                    const uploadData = await uploadRes.json();
+                    imageUrl = uploadData.url;
+                }
 
-                    await addProduct(product);
-
-                    // Show success
-                    const msg = document.getElementById('successMsg');
-                    msg.style.display = 'block';
-                    setTimeout(() => msg.style.display = 'none', 3000);
-
-                    // Reset form and preview
-                    document.getElementById('addProductForm').reset();
-                    document.getElementById('imagePreviewContainer').style.display = 'none';
-                    renderTable();
+                // Step 2: Create product with image URL
+                const product = {
+                    name: document.getElementById('name').value,
+                    image: imageUrl,
+                    price: parseFloat(document.getElementById('price').value) || 0,
+                    oldPrice: parseFloat(document.getElementById('oldPrice').value) || 0,
+                    discount: parseFloat(document.getElementById('discount').value) || 0,
+                    category: document.getElementById('category').value,
+                    promotion: document.getElementById('promotion').checked,
                 };
-                reader.readAsDataURL(file);
+
+                const createRes = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(product)
+                });
+
+                if (!createRes.ok) {
+                    const errText = await createRes.text();
+                    throw new Error('Lưu sản phẩm thất bại: ' + createRes.status + ' - ' + errText);
+                }
+
+                // Show success
+                const msg = document.getElementById('successMsg');
+                msg.style.display = 'block';
+                setTimeout(() => msg.style.display = 'none', 3000);
+
+                // Reset form and preview
+                document.getElementById('addProductForm').reset();
+                document.getElementById('imagePreviewContainer').style.display = 'none';
+                renderTable();
+
+            } catch (err) {
+                alert('❌ Lỗi: ' + err.message);
+                console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Thêm Sản Phẩm';
             }
         });
 

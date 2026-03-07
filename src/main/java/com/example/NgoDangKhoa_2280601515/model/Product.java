@@ -19,9 +19,10 @@ public class Product {
     private String description;
 
     @Column(columnDefinition = "MEDIUMTEXT")
-    private String image; // URL hình ảnh sản phẩm
+    private String image; 
 
-    private Boolean promotion; // Flag cho sản phẩm khuyến mãi online
+    @Column(name = "is_promotion")
+    private Boolean promotion; 
 
     private double oldPrice;
     private double discount;

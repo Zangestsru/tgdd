@@ -183,20 +183,20 @@
             tbody.innerHTML = '';
 
             // Sort by parent for better view
-            categories.sort((a, b) => a.parent.localeCompare(b.parent));
+            categories.sort((a, b) => (a.parent || '').localeCompare(b.parent || ''));
 
             categories.forEach(c => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${c.id}</td>
-                    <td><strong>${c.parent}</strong></td>
+                    <td><strong>${c.parent || '<em style="color:#999">Danh mục chính</em>'}</strong></td>
                     <td>
                         ${c.name} <br> 
                         <small style="color:gray">${c.showInAccessories ? '(Có ở Phụ kiện)' : ''}</small>
                         ${c.image ? `<br><img src="${c.image}" style="width:30px;height:30px;object-fit:cover;border-radius:4px;margin-top:4px;border:1px solid #ccc;">` : ''}
                     </td>
                     <td>
-                        <button class="btn-warning" onclick="editCategory(${c.id}, '${c.parent}', '${c.name.replace(/'/g, "\\'")}', ${c.showInAccessories ? 'true' : 'false'}, '${c.image ? c.image : ''}')">Sửa</button>
+                        <button class="btn-warning" onclick="editCategory(${c.id}, '${(c.parent || '').replace(/'/g, "\\'")}'  , '${c.name.replace(/'/g, "\\'")}'  , ${c.showInAccessories ? 'true' : 'false'}, '${c.image ? c.image : ''}')">Sửa</button>
                         <button class="btn-danger" onclick="removeCategory(${c.id})">Xóa</button>
                     </td>
                 `;

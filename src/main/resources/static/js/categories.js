@@ -11,6 +11,20 @@ async function getCategories() {
     return cats;
 }
 
+// Hàm nhóm các danh mục theo parent để hiển thị trên select/dropdown (vd trong admin.html)
+async function getGroupedCategories() {
+    const cats = await getCategories();
+    const grouped = {};
+    cats.forEach(c => {
+        const p = c.parent || 'Danh mục chính';
+        if (!grouped[p]) {
+            grouped[p] = [];
+        }
+        grouped[p].push(c);
+    });
+    return grouped;
+}
+
 async function addCategory(category) {
     try {
         await fetch('/api/categories', {

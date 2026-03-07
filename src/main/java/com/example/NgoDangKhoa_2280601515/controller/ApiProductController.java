@@ -5,10 +5,17 @@ import com.example.NgoDangKhoa_2280601515.model.Product;
 import com.example.NgoDangKhoa_2280601515.repository.CategoryRepository;
 import com.example.NgoDangKhoa_2280601515.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -19,6 +26,30 @@ public class ApiProductController {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Value("${file.upload-dir:uploads/products}")
+    private String uploadDir;
+
+    @PostMapping("/upload-image")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "File rỗng"));
+        }
+        try {
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            String ext = StringUtils.getFilenameExtension(file.getOriginalFilename());
+            String fileName = UUID.randomUUID().toString() + (ext != null ? "." + ext : "");
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            String fileUrl = "/" + uploadDir.replace("\\", "/") + "/" + fileName;
+            return ResponseEntity.ok(Map.of("url", fileUrl));
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+        }
+    }
 
     @GetMapping
     public List<Product> getAllProducts() {
@@ -83,6 +114,35 @@ public class ApiProductController {
             product.setCategoryName(dto.getCategory());
         }
         return productRepository.save(product);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductDTO dto) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setOldPrice(dto.getOldPrice());
+        product.setDiscount(dto.getDiscount());
+        if (dto.getImage() != null && !dto.getImage().isEmpty()) {
+            product.setImage(dto.getImage()); // Only update image if new one provided
+        }
+        product.setLink(dto.getLink());
+        product.setPromotion(dto.getPromotion() != null && dto.getPromotion());
+
+        if (dto.getCategory() != null && !dto.getCategory().isEmpty()) {
+            Category cat = categoryRepository.findAll().stream()
+                    .filter(c -> c.getName() != null && c.getName().equalsIgnoreCase(dto.getCategory()))
+                    .findFirst()
+                    .orElse(null);
+            product.setCategory(cat);
+            product.setCategoryName(dto.getCategory());
+        }
+
+        return ResponseEntity.ok(productRepository.save(product));
     }
 
     @DeleteMapping("/{id}")

@@ -110,6 +110,19 @@ async function addProduct(product) {
     }
 }
 
+// Update an existing product
+async function updateProduct(id, product) {
+    try {
+        await fetch(`/api/products/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(product)
+        });
+    } catch (e) {
+        console.error("Update failed", e);
+    }
+}
+
 // Delete a product (optional for now, but good for admin)
 async function deleteProduct(id) {
     try {
