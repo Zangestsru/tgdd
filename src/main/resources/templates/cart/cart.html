@@ -634,6 +634,20 @@
                 infoInput.value = "Thanh toán đơn hàng Giỏ hàng TGDĐ";
                 form.appendChild(infoInput);
 
+                let nameInput = document.createElement("input");
+                nameInput.type = "hidden";
+                nameInput.name = "customerName";
+                nameInput.value = "Anh Ngô Gia Phương";
+                form.appendChild(nameInput);
+
+                cart.forEach(item => {
+                    let productInput = document.createElement("input");
+                    productInput.type = "hidden";
+                    productInput.name = "productIds";
+                    productInput.value = item.id;
+                    form.appendChild(productInput);
+                });
+
                 document.body.appendChild(form);
                 form.submit();
                 localStorage.removeItem(CART_KEY);
