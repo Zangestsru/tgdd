@@ -4,8 +4,9 @@ import com.example.ngogiaphuong2280602523.model.Order;
 import com.example.ngogiaphuong2280602523.model.OrderStatus;
 import com.example.ngogiaphuong2280602523.model.Product;
 import com.example.ngogiaphuong2280602523.repository.OrderRepository;
-import com.example.ngogiaphuong2280602523.repository.ProductRepository;
+import com.example.ngogiaphuong2280602523.service.OrderService;
 import java.util.List;
+import java.util.ArrayList;
 import com.mservice.config.Environment;
 import com.mservice.enums.RequestType;
 import com.mservice.models.PaymentResponse;
@@ -29,7 +30,7 @@ public class MomoController {
     private OrderRepository orderRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private OrderService orderService;
 
     @GetMapping("/pay/{orderId}")
     public RedirectView payOrder(@PathVariable Long orderId) throws Exception {
@@ -59,24 +60,34 @@ public class MomoController {
                                           @RequestParam(value="productIds", required=false) List<Long> productIds) throws Exception {
         Order order = new Order();
         order.setCustomerName(customerName);
-        order.setTotalAmount(amount);
+        order.setCustomerEmail("momo_customer@example.com"); // Placeholder or get from session
+        order.setCustomerPhone("0000000000"); // Placeholder
+        order.setShippingAddress("Thanh toán MoMo");
         order.setStatus(OrderStatus.PENDING);
         
         if (productIds != null && !productIds.isEmpty()) {
-            List<Product> products = productRepository.findAllById(productIds);
+            List<Product> products = new ArrayList<>();
+            for (Long id : productIds) {
+                Product p = new Product();
+                p.setId(id);
+                products.add(p);
+            }
             order.setProducts(products);
         }
-        order = orderRepository.save(order);
+        
+        // Use orderService to handle calculations and stock
+        order = orderService.placeOrder(order);
 
         LogUtils.init();
         Environment environment = Environment.selectEnv("dev");
         String requestId = String.valueOf(System.currentTimeMillis());
         String momoOrderId = order.getId() + "_" + System.currentTimeMillis();
+        long finalAmount = (long) order.getTotalAmount();
         String returnURL = "http://localhost:8080/momo/return";
         String notifyURL = "http://localhost:8080/momo/notify";
 
         PaymentResponse captureWalletMoMoResponse = CreateOrderMoMo.process(
-                environment, momoOrderId, requestId, Long.toString(amount),
+                environment, momoOrderId, requestId, Long.toString(finalAmount),
                 orderInfo, returnURL, notifyURL, "", RequestType.CAPTURE_WALLET, Boolean.TRUE);
 
         return new RedirectView(captureWalletMoMoResponse.getPayUrl());

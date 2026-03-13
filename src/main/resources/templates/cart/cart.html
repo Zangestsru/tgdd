@@ -1507,6 +1507,8 @@
 
     <script>
         const CART_KEY = 'tgdd_cart';
+        const VIP_POINT_VALUE = 7500;
+        const VIP_USAGE_KEY = 'tgdd_use_vip_points';
 
         function getCart() {
             return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
@@ -1515,6 +1517,14 @@
         function saveCart(cart) {
             localStorage.setItem(CART_KEY, JSON.stringify(cart));
             renderCart();
+        }
+
+        function isUsingVipPoints() {
+            return localStorage.getItem(VIP_USAGE_KEY) === '1';
+        }
+
+        function setUseVipPoints(value) {
+            localStorage.setItem(VIP_USAGE_KEY, value ? '1' : '0');
         }
 
         function formatCurrency(amount) {
@@ -1587,15 +1597,17 @@
 
             // Pricing logic
             let shippingFee = 0;
-            let earnedPoints = 0;
             if (total >= 1000000 && totalQty >= 2) {
                 shippingFee = 0;
-                earnedPoints = 0;
             } else {
                 shippingFee = 30000;
-                earnedPoints = 1;
             }
-            const finalTotal = total + shippingFee;
+
+            // VIP points: 1 point = 7,500 VND, points are calculated from subtotal.
+            const earnedPoints = Math.floor(total / VIP_POINT_VALUE);
+            const usingVipPoints = isUsingVipPoints();
+            const vipDiscount = usingVipPoints ? earnedPoints * VIP_POINT_VALUE : 0;
+            const finalTotal = Math.max(0, total + shippingFee - vipDiscount);
 
             container.innerHTML = `
                 <!-- Tabs -->
@@ -1631,6 +1643,11 @@
                         <span>Điểm thưởng tích lũy (VIP):</span>
                         <span>+${earnedPoints} điểm</span>
                     </div>` : ''}
+                    ${usingVipPoints && vipDiscount > 0 ? `
+                    <div class="summary-row" style="margin-top:10px; color:#2e7d32; font-size: 14px;">
+                        <span>Giảm từ điểm VIP:</span>
+                        <span>- ${formatCurrency(vipDiscount)}</span>
+                    </div>` : ''}
                 </div>
 
                 <!-- Special Requests -->
@@ -1654,9 +1671,9 @@
                         <i class="fa-solid fa-chevron-right"></i>
                     </div>
                     <div class="switch-container">
-                        <span style="font-size:14px"><i class="fa-solid fa-medal" style="color:#ffd400"></i> Dùng điểm Quà Tặng VIP (2đ = 15k)</span>
+                        <span style="font-size:14px"><i class="fa-solid fa-medal" style="color:#ffd400"></i> Dùng điểm Quà Tặng VIP (1đ = 7.500đ)</span>
                         <label class="switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="use-vip-points" ${usingVipPoints ? 'checked' : ''}>
                             <span class="slider"></span>
                         </label>
                     </div>
@@ -1704,6 +1721,14 @@
                     <p style="text-align:center; font-size:11px; color:#999;">Bạn có thể chọn hình thức thanh toán ở bước tiếp theo</p>
                 </div>
             `;
+
+            const vipSwitch = document.getElementById('use-vip-points');
+            if (vipSwitch) {
+                vipSwitch.addEventListener('change', function () {
+                    setUseVipPoints(this.checked);
+                    renderCart();
+                });
+            }
         }
 
         async function submitOrder() {
@@ -1717,7 +1742,9 @@
             let subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
             let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
             let shippingFee = (subtotal >= 1000000 && totalQty >= 2) ? 0 : 30000;
-            const finalTotal = subtotal + shippingFee;
+            const earnedPoints = Math.floor(subtotal / VIP_POINT_VALUE);
+            const vipDiscount = isUsingVipPoints() ? earnedPoints * VIP_POINT_VALUE : 0;
+            const finalTotal = Math.max(0, subtotal + shippingFee - vipDiscount);
 
             let momoSelected = document.getElementById('pay1').checked;
 

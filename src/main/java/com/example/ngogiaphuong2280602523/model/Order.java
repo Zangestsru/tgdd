@@ -31,12 +31,13 @@ public class Order {
     private List<Product> products;
 
     private double totalAmount;
-    private double shippingFee;
-    private int rewardPoints;
+    private double shippingFee = 0;
+    private int rewardPoints = 0;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.PENDING;
 
+    @Column(name = "order_date")
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt;
 
