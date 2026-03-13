@@ -1,0 +1,1731 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng của bạn | Thegioididong.com</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-orange: #f37021;
+            --primary-blue: #288ad6;
+            --bg-gray: #f0f0f0;
+            --text-main: #333;
+            --text-secondary: #666;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-main);
+            padding-bottom: 120px;
+            /* Space for fixed bottom bar */
+        }
+
+        .header-top {
+            background-color: #ffd400;
+            height: 4px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .top-nav {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .top-nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 18px;
+        }
+
+        /* Delivery Tabs */
+        .delivery-tabs {
+            display: flex;
+            background: #fff;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+        }
+
+        .tab.active {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--primary-blue);
+            background-color: #f9f9f9;
+        }
+
+        .tab i {
+            margin-right: 8px;
+        }
+
+        /* Customer Info */
+        .section-box {
+            padding: 15px;
+            border-bottom: 8px solid var(--bg-gray);
+        }
+
+        .customer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+        }
+
+        .customer-info .title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .customer-info .sub-title {
+            color: var(--primary-orange);
+            font-size: 13px;
+        }
+
+        /* Product List */
+        .product-item {
+            display: flex;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-right: 15px;
+        }
+
+        .product-detail {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            padding-right: 80px;
+            /* Avoid price overlap */
+        }
+
+        .product-variant {
+            display: inline-block;
+            background: #f1f1f1;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .price-group {
+            position: absolute;
+            right: 0;
+            top: 20px;
+            text-align: right;
+        }
+
+        .price-current {
+            color: #d0021b;
+            font-weight: bold;
+            display: block;
+            font-size: 15px;
+        }
+
+        .price-old {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 12px;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .promo-tag {
+            background: #f6f6f6;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+
+        .promo-tag a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .cart-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .btn-remove {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .quantity-control {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .quantity-control button {
+            width: 32px;
+            height: 32px;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-control span {
+            width: 45px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Labels and Options */
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            font-size: 14px;
+        }
+
+        .option-item input[type="checkbox"],
+        .option-item input[type="radio"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .payment-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-info label {
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+            padding-left: 0;
+        }
+
+        /* Summary Area */
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+
+        .total-row {
+            font-weight: bold;
+            font-size: 17px;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Bottom Fixed Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            padding: 15px;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(180deg, #f7941e 0%, #f37021 100%);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(243, 112, 33, 0.2);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-cart i {
+            font-size: 100px;
+            color: #e0e0e0;
+            margin-bottom: 25px;
+        }
+
+        .empty-cart h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .empty-cart p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 12px 40px;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* Custom Switch CSS */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary-blue);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+<style id="header-css">
+/* === HEADER CSS FROM INDEX.HTML === */
+[class^="icon-"],[class*=" icon-"]{background-image:url(//cdnv2.tgdd.vn/webmwg/2024/ContentMwg/images/homev2/desk/icon_common@2x.png?v=2);background-repeat:no-repeat;display:inline-block;height:30px;width:30px;line-height:30px;vertical-align:middle;background-size:300px 200px}
+.icon-search{background-position:-150px 0;height:17px;width:17px}
+[class^="iconnewglobal-"],[class*=" iconnewglobal-"]{background-image:url(//cdnv2.tgdd.vn/webmwg/2024/ContentMwg/images/homev2/desk/iconnew-min.png?v=4);background-repeat:no-repeat;display:inline-block;height:30px;width:30px;line-height:30px;vertical-align:middle;background-size:310px 257px}
+.iconnewglobal-logo{background-position:0 -176px;width:228px;height:40px}
+.iconnewglobal-whitecart{background-position:-275px 0;width:24px;height:24px}
+.iconnewglobal-location{background-position:-35px 0;width:8px;height:10px}
+.iconnewglobal-search{background-position:-107px 0;width:18px;height:18px}
+.header-top-bar{position:relative;z-index:15}
+.header-mask{height:98px;width:100%;display:none}
+.header.v2024{background-color:#ffd500;position:sticky;top:0;z-index:100}
+.header.v2024 .header__top{display:flex;width:1200px;margin:auto;background-color:#ffd400;padding:10px 0 0}
+.header.v2024 .header__top>div{display:inline-flex;width:auto;max-width:none;padding-left:0;align-items:center}
+.header.v2024 .header__top>div>.header__logo{padding-right:0}
+.header.v2024 .header__top>div>.header__search{width:415px;border-radius:32px;margin:0 10px;position:relative;background-color:#fff}
+.header.v2024 .header__top>div>.header__search>input{border-radius:32px;padding:8px;margin-left:30px;border:0;height:40px;width:calc(100% - 65px);font-size:12px}
+.header.v2024 .header__top>div>.header__search>button{background:transparent;border:0;position:absolute;right:inherit;left:0;width:30px;height:40px;top:0;cursor:pointer}
+.header.v2024 .header__top>div>.header__search>button .icon-search{background-image:url(//cdnv2.tgdd.vn/webmwg/2024/ContentMwg/images/homev2/desk/iconnew-min.png?v=4)!important;background-repeat:no-repeat;background-size:310px 257px!important;background-position:-151px -18px;margin-left:12px}
+.header.v2024 .header__top>div>.header__search #search-result{position:absolute;top:42px;left:0;width:100%;z-index:999}
+.header__main{background-color:#ffd400;padding:0 0 10px}
+.header__main>div{width:100%;max-width:1220px;margin:auto;padding:0 10px}
+.header.v2024 .header__top div.profile{position:relative;z-index:11;width:auto}
+.header.v2024 .header__top div.profile>a.name-order{width:110px;padding:0 5px 0 0;border-radius:32px;height:42px;line-height:42px;position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background-color:transparent;font-size:14px;color:#333;text-decoration:none;float:left;margin:0 21px;display:flex;align-items:center}
+.header.v2024 .header__top div.profile>a.name-order:hover{background-color:#fe9}
+.header.v2024 .header__top div.profile>a.name-order>i{display:inline-block;vertical-align:middle;width:24px;height:24px;background:url(//cdnv2.tgdd.vn/webmwg/2024/ContentMwg/images/homev2/desk/iconnew-min.png?v=4) no-repeat left top;background-size:310px 257px;background-position:-29px -219px;margin-right:5px}
+.header.v2024 .header__top>div>a.header__cart{width:110px;padding:0;border:0;border-radius:32px;height:42px;line-height:42px;text-align:center;margin-right:10px;background-color:transparent;position:relative;color:#333;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.header.v2024 .header__top>div>a.header__cart:hover{background-color:#fe9}
+.header.v2024 .header__top>div>a.header__cart i{margin-right:0;background-position:-54px -218px}
+.header.v2024 .header__top>div>a.header__cart span{font-weight:normal;font-size:14px}
+.header__cart .box-cart{position:relative;display:inline-block;vertical-align:middle}
+.cart-number{border-radius:50%;color:#fff;display:inline-block;font-size:10px;line-height:12px;left:8px;height:12px;position:absolute;text-align:center;top:0;width:12px}
+.cart-number.has-cart{background-color:#dd1c1a;line-height:inherit}
+.header.v2024 .header__top>div>a.header__address{width:300px;margin-right:0;float:right;background-color:#ffe14c;border-radius:32px;padding:5px 8px 5px 33px;position:relative;height:42px;display:flex;flex-wrap:nowrap;align-items:center;font-size:14px;color:#333;text-decoration:none}
+.header.v2024 .header__top>div>a.header__address:hover{background-color:#fe9}
+.header.v2024 .header__top>div>a.header__address>i{position:absolute;left:11px;width:17px;height:17px}
+.header.v2024 .header__top>div>a.header__address span{color:#333;font-weight:bold;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;overflow:hidden;max-width:117px;text-transform:capitalize;padding-right:15px;position:relative}
+.header.v2024 .header__top>div>a.header__address span::before{border-left:1px solid #333;border-top:1px solid #333;height:5px;width:5px;border-right:0;content:"";position:absolute;top:43%;right:7px;transform:rotate(135deg)}
+.view-cart{display:none}
+.main-menu{display:flex;justify-content:space-between;margin:0 -10px;padding-top:10px}
+.main-menu a{color:#000;font-size:14px;line-height:16px;text-decoration:none}
+.main-menu li{cursor:pointer;padding:10px;position:relative;list-style:none}
+.main-menu li.current{background-color:#fff}
+.main-menu li:last-child{padding-right:0}
+.main-menu .navmwg{display:none;position:absolute;background:#fff;top:43px;width:max-content;border-radius:4px;padding:10px;z-index:10;border:1px solid #eee;left:0;grid-auto-rows:minmax(min-content,max-content);grid-template-columns:repeat(4,auto)}
+.main-menu li.has-list:hover .navmwg{display:grid}
+.main-menu .navmwg.limit-width{width:160px}
+.main-menu li.has-list:hover .navmwg.limit-width{display:block}
+.main-menu .navmwg::before,.navmwg::after{content:"";width:0;height:0;position:absolute;bottom:100%;left:40px;border-bottom:10px solid #fff;border-left:10px solid transparent;border-right:10px solid transparent}
+.main-menu a span.has-child:after{content:"";width:0;height:0;border-top:6px solid #333;border-left:6px solid transparent;border-right:6px solid transparent;display:inline-block;vertical-align:middle;margin-left:5px}
+.main-menu .navmwg div{width:100%;margin-bottom:10px;margin-right:10px}
+.main-menu .navmwg .no-child-final{margin:0;width:auto;float:none}
+.main-menu .navmwg .no-child-final a{display:block}
+.main-menu .navmwg strong{text-transform:uppercase;border-bottom:1px solid #eee;font-size:13px;padding-bottom:5px;color:#333;display:block;margin-bottom:5px}
+.main-menu .navmwg div a:hover h3{font-weight:bold}
+.main-menu .navmwg a,.main-menu .navmwg div a{display:block;padding:10px 5px 0 0;color:#000;font-size:11px;position:relative}
+.main-menu .navmwg a img{margin-right:5px;vertical-align:middle}
+.main-menu .navmwg h3{display:inline;font-size:11px;font-weight:normal}
+.label-new.menuitem_label{background:#f03;color:#fff;font-size:9px;padding:1px 4px;border-radius:3px;position:absolute;right:0;top:10px}
+.header-overlay{position:fixed;background:rgba(0,0,0,.5);left:0;top:0;z-index:12;width:100%;height:100%;display:none}
+.header-overlay>div{position:absolute;width:1200px;top:0;left:0;right:0;margin:auto}
+.header-overlay>div>a{width:36px;height:36px;background-color:#98a2b3;border-radius:50%;top:58px;right:100px;position:absolute;color:#333;text-align:center;line-height:36px;display:none}
+.banner-media{overflow:hidden}
+.banner-media img{width:100%;height:auto}
+.media-slider .item{display:none}
+.media-slider .item:first-child{display:block}
+.lazy-menu{display:inline-block;vertical-align:middle;width:25px;height:25px}
+</style>
+</head>
+
+<body>
+
+        <div class="header-top-bar">
+        <div class="banner-media">
+            <div class="media-slider" data-size="1">
+                <div class="item" data-background-color="#B40101" data-order="1">
+                    <a aria-label="slide" data-cate="0" data-place="7994" href="https://www.thegioididong.com/flashsale"
+                        onclick="jQuery.ajax({ url: '/bannertracking?bid=108181&r='+ (new Date).getTime(), async: true, cache: false });"><img
+                            width='1200' height='44' loading="lazy" class="lazyload owl-lazy"
+                            data-src="//cdnv2.tgdd.vn/mwg-static/tgdd/Banner/25/28/2528971e6119a5d6b12f5e9b03c11131.png"
+                            alt="Banner top bar"></a>
+                </div>
+            </div>
+            <style>
+                .banner-media {
+                    background-color: #B40101;
+                }
+            </style>
+
+        </div>
+    </div>
+    <header class="header v2024   theme-lunaryear     hasbanner" data-sub="0">
+        <div class="header__top">
+            <div>
+                <a href="/" class="header__logo" aria-label="logo">
+                    <i class="iconnewglobal-logo"></i>
+                </a>
+
+                <form action="/tim-kiem" onsubmit="return suggestSearch(event);" class="header__search ">
+                    <input id="skw" type="text" class="input-search" onkeyup="suggestSearch(event);"
+                        placeholder="Bạn tìm gì..." name="key" autocomplete="off" maxlength="100">
+                    <button type="submit" aria-label="button suggest search">
+                        <i class="icon-search"></i>
+                    </button>
+                    <div id="search-result"></div>
+                </form>
+                <div class="profile">
+                    <a href="/lich-su-mua-hang" class="name-order active">
+                        <i></i> Đăng nhập
+                    </a>
+                </div>
+                <a href="/cart" class="header__cart menu-info" id="cart-box">
+                    <div class="box-cart">
+                        <i class="iconnewglobal-whitecart"></i>
+                        <span class="cart-number"></span>
+                    </div>
+                    <span>Giỏ hàng</span>
+                    <div class="view-cart">
+                        <span>Đã thêm vào giỏ hàng</span>
+                        <b onclick="window.location.href=/cart">Xem giỏ hàng</b>
+                    </div>
+                </a>
+                <a href="javascript:;" class="header__address" onclick="OpenLocation()">
+                    <i class="icon-location"></i>
+                    <span>Chọn vị trí để xem giá, thời gian giao:</span>
+
+
+                    <div class="remind_location hide">
+                        <div class="remind_question">
+                            Bạn đang ở tại <b>Hồ Chí Minh</b>?
+                            <p class="remind_change">Sửa</p>
+                        </div>
+
+                        <p class="remind_content">Giá và khuyến mãi đang lấy theo khu vực này.</p>
+                        <div class="remind_btn-close"></div>
+                    </div>
+                    <style>
+                        .remind_location {
+                            z-index: 10 !important;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                            background: white;
+                            border-radius: 8px;
+                            padding: 16px 8px;
+                            z-index: 1;
+                            position: absolute;
+                            top: 50px;
+                            width: 300px;
+                            left: 0;
+                            line-height: 20px;
+                            transition: opacity 2s ease;
+                            opacity: 1;
+                            color: #333333
+                        }
+
+                        .remind_location.fade-out {
+                            opacity: 0;
+                        }
+
+                        .remind_location::after {
+                            content: '';
+                            width: 0;
+                            height: 0;
+                            position: absolute;
+                            top: -8px;
+                            left: 20%;
+                            border-bottom: 10px solid #d9d9d9;
+                            border-left: 10px solid transparent;
+                            border-right: 10px solid transparent;
+                            border-bottom-color: #fff;
+                            z-index: 12;
+                        }
+
+                        .remind_location::before {
+                            content: '';
+                            width: 0;
+                            height: 0;
+                            position: absolute;
+                            bottom: -1px;
+                            left: 20%;
+                            border-bottom: 10px solid #d9d9d9;
+                            border-left: 10px solid transparent;
+                            border-right: 10px solid transparent;
+                            border-bottom-color: #fff;
+                            z-index: 12;
+                        }
+
+                        .remind_change {
+                            display: inline;
+                            color: #2377E8;
+                            margin-left: 4px;
+                        }
+
+                        .remind_content {
+                            font-size: 12px
+                        }
+
+                        .remind_btn-close {
+                            position: absolute;
+                            content: "";
+                            top: 6px;
+                            right: 6px;
+                            width: 18px;
+                            height: 18px;
+                            border-radius: 50%;
+                            background-color: #98a2b3;
+                            z-index: 2;
+                            cursor: pointer;
+                        }
+
+                        .remind_btn-close::before {
+                            position: absolute;
+                            content: "";
+                            top: 9px;
+                            right: 4px;
+                            width: 10px;
+                            border-radius: 8px;
+                            height: 1px;
+                            transform: rotate(45deg);
+                            background-color: #fff;
+                        }
+
+                        .remind_btn-close::after {
+                            position: absolute;
+                            content: "";
+                            top: 9px;
+                            right: 4px;
+                            width: 10px;
+                            border-radius: 8px;
+                            height: 1px;
+                            transform: rotate(-45deg);
+                            background-color: #fff;
+                        }
+
+                        @media (max-width: 640px) {
+                            .remind_location {
+                                left: -30px;
+                            }
+
+                            .remind_location::after {
+                                top: -16px;
+                            }
+                        }
+                    </style>
+                    <script>
+                        const CookieCustomerLocation = () => {
+                            let nameCookie = 'DMX_Personal';
+                            if (isStaging) nameCookie += '_Staging';
+                            if (isBeta) nameCookie += '_Beta';
+                            return nameCookie;
+                        }
+                        function initFadeRemindLocation() {
+                            var remindElems = document.querySelectorAll('.remind_location');
+                            remindElems.forEach(function (elem) {
+                                elem.classList.remove('hide');
+                            });
+                            const remind = document.querySelector('.remind_location');
+                            if (remind) {
+                                setTimeout(() => {
+                                    remind.classList.add('fade-out');
+
+                                    setTimeout(() => {
+                                        remind.style.display = 'none';
+                                    }, 2000);
+                                }, 10000);
+                            }
+                        }
+
+                        function hasLocationTwoLevel(cus) {
+                            return cus && cus.ProvinceId > 0 && cus.WardId > 0;
+                        }
+
+                        function inintRemindLocation() {
+                            var remindElems = document.querySelectorAll('.remind_location');
+
+                            if (remindElems.length === 0) return;
+
+                            var locationCookie = getCookieV2(CookieCustomerLocation());
+
+                            if (locationCookie) {
+                                var customer = null;
+                                try {
+                                    customer = JSON.parse(locationCookie);
+                                } catch (e) {
+                                    console.warn("Cookie location không hợp lệ:", locationCookie, e);
+                                }
+
+                                if (!hasLocationTwoLevel(customer)) {
+                                    if (getCookieV2("offRemindLocation") !== "1") {
+                                        initFadeRemindLocation();
+                                    }
+                                } else {
+                                    return;
+                                }
+                            }
+                            if (getCookieV2(GetNamCookiesRunlive(cookieHis)) === '') {
+                                if (getCookieV2("offRemindLocation") !== "1") {
+                                    initFadeRemindLocation();
+                                }
+                                return;
+                            } else {
+                                $.ajax({
+                                    url: `${lsmhPath}`,
+                                    type: 'GET',
+                                    success: function (res) {
+                                        // Có cookie nhưng hết hạn hoặc không hợp lệ => chưa đăng nhập
+                                        if (res.statusCode === 400) {
+                                            if (getCookieV2("offRemindLocation") !== "1") {
+                                                initFadeRemindLocation();
+                                            }
+                                        }
+                                    },
+                                    error: function (xhr) {
+                                        console.error(xhr);
+                                    }
+                                });
+                                return;
+                            }
+                        }
+
+
+                        document.querySelector('.remind_location').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                        });
+                        document.querySelector('.remind_change').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            OpenLocation();
+                        });
+                        document.querySelector('.remind_btn-close').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            $('.remind_location').addClass('hide');
+                            setCookie("offRemindLocation", 1, 30);
+                        });
+                    </script>
+
+                </a>
+
+
+
+
+            </div>
+        </div>
+        <div class="header__main">
+            <div>
+                <ul class="main-menu">
+                    <li class="">
+                        <a href="/dtdd">
+
+                            <span class="">&#x110;i&#x1EC7;n tho&#x1EA1;i</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/laptop">
+
+                            <span class="">Laptop</span>
+                        </a>
+                    </li>
+                    <li class="has-list">
+                        <a href="/phu-kien">
+
+                            <span class="has-child">Ph&#x1EE5; ki&#x1EC7;n</span>
+                        </a>
+                        <div class="navmwg ">
+                            <div class="item-child ">
+                                <strong>
+                                    Ph&#x1EE5; ki&#x1EC7;n di &#x111;&#x1ED9;ng
+                                </strong>
+                                <a href="/sac-dtdd">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/99/61/9961578164909f8a9ee7678dc95feeb0.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>S&#x1EA1;c d&#x1EF1; ph&#xF2;ng</h3>
+                                </a>
+                                <a href="/sac-cap">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/6b/64/6b646ec5f1e9a726933ee31b86a32524.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>S&#x1EA1;c, c&#xE1;p</h3>
+                                </a>
+                                <a href="/op-lung-flipcover">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/34/02/3402dd9ba3457b84482572d10bcae84e.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x1ED0;p l&#x1B0;ng &#x111;i&#x1EC7;n tho&#x1EA1;i</h3>
+                                </a>
+                                <a href="/op-lung-may-tinh-bang">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/83/60/836050bcf5e1c92dd8d9899bef9f039d.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x1ED0;p l&#x1B0;ng m&#xE1;y t&#xED;nh b&#x1EA3;ng</h3>
+                                </a>
+                                <a href="/mieng-dan-man-hinh">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/72/f4/72f4b3ee8f5c1b1a170d590b3a07256d.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Mi&#x1EBF;ng d&#xE1;n</h3>
+                                </a>
+                                <a href="/mieng-dan-camera">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/33/77/33770e364079ac9dd3888190bd574b8d.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Mi&#x1EBF;ng d&#xE1;n Camera</h3>
+                                </a>
+                                <a href="/tui-dung-airpods">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/24/66/2466de3fc4831f43afb0d69462130030.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>T&#xFA;i &#x111;&#x1EF1;ng AirPods</h3>
+                                </a>
+                                <a href="/airtag">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/27/e7/27e7538fb93c10e768cd0344ee8f8cd9.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>AirTag, V&#x1ECF; b&#x1EA3;o v&#x1EC7; AirTag</h3>
+                                </a>
+                                <a href="/phu-kien-thong-minh">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/3f/d5/3fd5723ac6f01521bd3d768d8ebc8d1a.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#xFA;t tablet</h3>
+                                </a>
+                                <a href="/gia-do-dien-thoai">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/26/6f/266f538d2cee7899d54a8b5f57985d83.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Gi&#xE1; &#x111;&#x1EE1; &#x111;i&#x1EC7;n tho&#x1EA1;i/laptop/m&#xE1;y
+                                        t&#xED;nh b&#x1EA3;ng</h3>
+                                </a>
+                                <a href="/phu-kien-op-lung">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/01/d1/01d140b8ea3be3cdbf4b99299fd14969.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>D&#xE2;y &#x111;eo &#x111;i&#x1EC7;n tho&#x1EA1;i</h3>
+                                </a>
+                                <a href="/ong-kinh-tele">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/ff/9a/ff9a1716ada03c1b0c3498b9bd6b6373.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x1ED0;ng kinh &#x111;i&#x1EC7;n tho&#x1EA1;i</h3>
+                                    <span class="label-new menuitem_label">M&#x1EDB;i</span>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Ph&#x1EE5; ki&#x1EC7;n laptop, PC
+                                </strong>
+                                <a href="/hub-chuyen-doi">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/e1/2d/e12deafa7615646e9cafc5bbd0667da8.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Hub, c&#xE1;p chuy&#x1EC3;n &#x111;&#x1ED5;i</h3>
+                                </a>
+                                <a href="/chuot-may-tinh">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/53/a6/53a6599a6fc414025b42c5435928008f.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Chu&#x1ED9;t m&#xE1;y t&#xED;nh</h3>
+                                </a>
+                                <a href="/ban-phim">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/7a/d3/7ad3598d5e291815bc6c7f98bb73d078.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#xE0;n ph&#xED;m</h3>
+                                </a>
+                                <a href="/thiet-bi-mang">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/f9/32/f93258b536d9a7c59b7746e533fb271f.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Router - Thi&#x1EBF;t b&#x1ECB; m&#x1EA1;ng</h3>
+                                </a>
+                                <a href="/tui-chong-soc">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/33/8b/338bb7d3763dee703562a108b497fc2f.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Balo, t&#xFA;i ch&#x1ED1;ng s&#x1ED1;c</h3>
+                                </a>
+                                <a href="/tui-dung-phu-kien">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/9e/d6/9ed6b66919dccf3d26fc864184149913.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>T&#xFA;i &#x111;&#x1EF1;ng ph&#x1EE5; ki&#x1EC7;n</h3>
+                                </a>
+                                <a href="/mieng-phu-ban-phim">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/c3/97/c397a6f5e562a5f3ad3084e4563d6dda.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Ph&#x1EE7; ph&#xED;m laptop</h3>
+                                </a>
+                                <a href="/phan-mem">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/bb/07/bb07512d2429a1b38cedd20b750b734c.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Ph&#x1EA7;n m&#x1EC1;m</h3>
+                                </a>
+                                <a href="/gia-treo-man-hinh">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/7c/a7/7ca750e732738e17142f501ba33eb423.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Gi&#xE1; treo m&#xE0;n h&#xEC;nh</h3>
+                                </a>
+                                <a href="/den-dien-den-sac">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/b9/ed/b9ed8fbbb77742a0b721bbf2bc6ca8ef.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xE8;n th&#xF4;ng minh/livestream</h3>
+                                    <span class="label-new menuitem_label">M&#x1EDB;i</span>
+                                </a>
+                                <a href="/mieng-lot-chuot">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/b3/0e/b30ead80f9b691b781060ec46e8e2928.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Mi&#x1EBF;ng l&#xF3;t chu&#x1ED9;t</h3>
+                                </a>
+                                <a href="/bang-ve-dien-tu">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/58/c0/58c0179556e1f44469d351ad90cb325e.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#x1EA3;ng v&#x1EBD; &#x111;i&#x1EC7;n t&#x1EED;</h3>
+                                    <span class="label-new menuitem_label">M&#x1EDB;i</span>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Thi&#x1EBF;t b&#x1ECB; &#xE2;m thanh
+                                </strong>
+                                <a href="/tai-nghe-bluetooth">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/7c/09/7c09cbc92ef23816aa7d857ba8e0e194.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Tai nghe Bluetooth</h3>
+                                </a>
+                                <a href="/tai-nghe-co-day">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/12/1c/121cd7cb1fc1750893b3f41436b12c85.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Tai nghe d&#xE2;y</h3>
+                                </a>
+                                <a href="/tai-nghe-chup-tai">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/cf/9e/cf9e0eecbfc3e326f1c89f13b1ffe320.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Tai nghe ch&#x1EE5;p tai</h3>
+                                </a>
+                                <a href="/tai-nghe-the-thao">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/38/f7/38f7bf684502b5aa0c7949f6d38a6a55.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Tai nghe th&#x1EC3; thao</h3>
+                                </a>
+                                <a href="/loa-laptop">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/76/6b/766be9586a3a82491ba8106b7e558605.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Loa</h3>
+                                    <span class="label-new menuitem_label">Hot</span>
+                                </a>
+                                <a href="/micro-cac-loai">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/c7/13/c71369bc9b7b00cd99d8c8076e5a9e7e.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Micro</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Camera
+                                </strong>
+                                <a href="/camera-giam-sat">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/af/70/af70e11a54ceeda4d04c41298016f615.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Camera Gi&#xE1;m S&#xE1;t</h3>
+                                    <span class="label-new menuitem_label">Hot</span>
+                                </a>
+                                <a href="/camera-giam-sat?g=camera-giam-sat">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/e8/0c/e80cc810cf5d743dc7e88c7031380c80.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Camera trong nh&#xE0;</h3>
+                                </a>
+                                <a href="/camera-giam-sat-camera-ngoai-troi">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/9e/e9/9ee9ae20f38eff97221f040a735752ce.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Camera ngo&#xE0;i tr&#x1EDD;i</h3>
+                                </a>
+                                <a href="/camera-hanh-trinh-hanh-dong">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/f4/2a/f42aa8a01e29d247b177a997c808c990.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Camera h&#xE0;nh tr&#xEC;nh / h&#xE0;nh &#x111;&#x1ED9;ng</h3>
+                                    <span class="label-new menuitem_label">Hot</span>
+                                </a>
+                                <a href="/camera-giam-sat-camera-nang-luong-mat-troi">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/5b/46/5b46309f2e80ca497b76f239ccf18829.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Camera N&#x103;ng L&#x1B0;&#x1EE3;ng M&#x1EB7;t Tr&#x1EDD;i</h3>
+                                </a>
+                                <a href="/camera-giam-sat-camera-4g">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/18/9f/189f4355b6af9e13a9a6d8a05e862ce5.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Camera 4G</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Ph&#x1EE5; ki&#x1EC7;n gaming
+                                </strong>
+                                <a href="/chuot-may-tinh-chuot-gaming">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/4d/c5/4dc5692050284aa3119430c8b77a1a41.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Chu&#x1ED9;t gaming</h3>
+                                </a>
+                                <a href="/ban-phim-gaming">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/7c/f2/7cf2df3939fd6d8966c1965cc781d02b.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#xE0;n ph&#xED;m gaming</h3>
+                                </a>
+                                <a href="/tai-nghe-gaming">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/25/71/2571e5bc85393230a9d8c793c0fb6ad3.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Tai nghe gaming</h3>
+                                </a>
+                                <a href="/mieng-lot-chuot">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/49/70/497053f8d25c1602c5c79faf15ac2049.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Mi&#x1EBF;ng l&#xF3;t chu&#x1ED9;t</h3>
+                                </a>
+                                <a href="/may-choi-game-cam-tay-tay-cam-choi-game">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0c/9e/0c9e064d8ec9452a931d021dfee96c79.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Tay c&#x1EA7;m ch&#x1A1;i game</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Thi&#x1EBF;t b&#x1ECB; l&#x1B0;u tr&#x1EEF;
+                                </strong>
+                                <a href="/o-cung-di-dong">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/c1/4e/c14eb68c77b7402be257c972a8a9625b.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x1ED4; c&#x1EE9;ng di &#x111;&#x1ED9;ng</h3>
+                                </a>
+                                <a href="/the-nho-dien-thoai">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0b/e8/0be891a66b3f2fdf30a3a18070d1453a.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Th&#x1EBB; nh&#x1EDB;</h3>
+                                </a>
+                                <a href="/usb">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/34/b6/34b670e9f0f45c2d0290f41c5e747c28.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>USB</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Ph&#x1EE5; ki&#x1EC7;n kh&#xE1;c
+                                </strong>
+                                <a href="/may-chieu">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/32/2f/322fcac70beaf1bb7c5925f0dc8663ac.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE1;y chi&#x1EBF;u</h3>
+                                </a>
+                                <a href="/gay-tu-suong">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/90/1a/901ad6c88ccafc404df1fdca08ac6ceb.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Gimbal</h3>
+                                    <span class="label-new menuitem_label">Hot</span>
+                                </a>
+                                <a href="/phu-kien-oto">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/9c/8e/9c8e5c73e245a377862049b483cb3b21.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Ph&#x1EE5; ki&#x1EC7;n &#xF4; t&#xF4;</h3>
+                                </a>
+                                <a href="/may-chup-anh-lay-lien">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/58/96/5896ea953c2a15fd8bebab2f35fdb47f.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE1;y ch&#x1EE5;p &#x1EA3;nh l&#x1EA5;y li&#x1EC1;n</h3>
+                                    <span class="label-new menuitem_label">M&#x1EDB;i</span>
+                                </a>
+                                <a href="/flycam">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/00/34/00347116e3b25ffa8e81d216607ada64.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Flycam</h3>
+                                    <span class="label-new menuitem_label">Hot</span>
+                                </a>
+                                <a href="/pin">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/d9/89/d9895ecb4c3fe80fa6a5788548c0d40d.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Pin ti&#x1EC3;u</h3>
+                                </a>
+                                <a href="/quat-mini">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/07/ab/07ab4544063dddcba20bf16c8066745d.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Qu&#x1EA1;t mini</h3>
+                                </a>
+                                <a href="/quat-suoi">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/5b/81/5b815a1ca0cf9792245e3d8b03e05f6d.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Qu&#x1EA1;t s&#x1B0;&#x1EDF;i</h3>
+                                    <span class="label-new menuitem_label">M&#x1EDB;i</span>
+                                </a>
+                                <a href="/den-dien-den-sac-den-nang-luong-mat-troi">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/cf/ec/cfec82e82109dd1f4f889a5df9aaad38.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xE8;n n&#x103;ng l&#x1B0;&#x1EE3;ng m&#x1EB7;t tr&#x1EDD;i</h3>
+                                    <span class="label-new menuitem_label">M&#x1EDB;i</span>
+                                </a>
+                                <a href="/day-dong-ho">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/b5/a5/b5a531c9008b87379f8f2cae7c37cd1c.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>D&#xE2;y &#x111;eo &#x111;&#x1ED3;ng h&#x1ED3;</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Th&#x1B0;&#x1A1;ng hi&#x1EC7;u h&#xE0;ng &#x111;&#x1EA7;u
+                                </strong>
+                                <a href="/phu-kien/apple">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/6a/6a/6a6a116227ceaf2f407f5573f44069ec.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Apple</h3>
+                                </a>
+                                <a href="/phu-kien/samsung">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/ea/1d/ea1d0470faaea58604610926a4f45fcb.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Samsung</h3>
+                                </a>
+                                <a href="/phu-kien/imou">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/ee/a1/eea14df76a63a0f6b9f3267143856602.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Imou</h3>
+                                </a>
+                                <a href="/phu-kien/baseus">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/0a/bd/0abddded6e3650bcd1859c511fcc2747.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Baseus</h3>
+                                </a>
+                                <a href="/phu-kien/jbl">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/be/88/be887406c072668c452a41be86574976.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>JBL</h3>
+                                </a>
+                                <a href="/phu-kien/anker">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/67/bd/67bd9cf55ca10673bf3df7605e295bb4.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Anker</h3>
+                                </a>
+                                <a href="/phu-kien/xmobile">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/c2/26/c22643c4c1ee6d06a78a4aebea060e37.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Xmobile</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="">
+                        <a href="/dong-ho-thong-minh-ldp">
+
+                            <span class="">Smartwatch</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/dong-ho">
+
+                            <span class="">&#x110;&#x1ED3;ng h&#x1ED3;</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/may-tinh-bang">
+
+                            <span class="">Tablet</span>
+                        </a>
+                    </li>
+                    <li class="has-list">
+                        <a href="/may-doi-tra">
+
+                            <span class="has-child">M&#xE1;y c&#x169;, Thu c&#x169;</span>
+                        </a>
+                        <div class="navmwg ">
+                            <div class="item-child ">
+                                <strong>
+                                    M&#xE1;y c&#x169;, Thu c&#x169;
+                                </strong>
+                                <a href="/may-doi-tra">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/47/1b/471b8073fdb15619b6c958e5316e7f61.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE1;y c&#x169; gi&#xE1; t&#x1ED1;t</h3>
+                                </a>
+                                <a href="/thu-cu-doi-moi">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/4e/b2/4eb2cac00f6019e50875c3d1d4f74d6b.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Thu c&#x169; &#x111;&#x1ED5;i m&#x1EDB;i</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="has-list">
+                        <a href="/pc-may-in">
+
+                            <span class="has-child">M&#xE0;n h&#xEC;nh, M&#xE1;y in</span>
+                        </a>
+                        <div class="navmwg ">
+                            <div class="item-child ">
+                                <strong>
+                                    PC, M&#xE0;n h&#xEC;nh
+                                </strong>
+                                <a href="/may-tinh-de-ban">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/5c/20/5c20902d35f326dc8947e3a6b2adc178.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE1;y t&#xED;nh &#x111;&#x1EC3; b&#xE0;n</h3>
+                                </a>
+                                <a href="/man-hinh-may-tinh">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/b6/76/b676088f8fa091112be65b0b4e8bb786.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE0;n h&#xEC;nh m&#xE1;y t&#xED;nh</h3>
+                                </a>
+                                <a href="/gia-treo-man-hinh">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/89/ab/89abcd01f43ef18e354c11d4e58d026e.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Gi&#xE1; treo m&#xE0;n h&#xEC;nh</h3>
+                                </a>
+                                <a href="/may-choi-game-cam-tay">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/6b/08/6b08326eb6783191ab1b32080618a663.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE1;y ch&#x1A1;i game</h3>
+                                </a>
+                                <a href="/bo-luu-dien">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/d9/00/d900a20aec787d7c0fcea0e74d076529.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#x1ED9; l&#x1B0;u &#x111;i&#x1EC7;n</h3>
+                                </a>
+                                <a href="/thiet-bi-ma-vach">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/ce/8d/ce8d96a261ef112958d47f85d6de4816.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE1;y qu&#xE9;t m&#xE3; v&#x1EA1;ch</h3>
+                                    <span class="label-new menuitem_label">M&#x1EDB;i</span>
+                                </a>
+                                <a href="/phan-mem">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/bb/07/bb07512d2429a1b38cedd20b750b734c.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Ph&#x1EA7;n m&#x1EC1;m</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    M&#xE1;y in, M&#x1EF1;c in
+                                </strong>
+                                <a href="/muc-in">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/38/76/3876a43c46810299826ada7874b1cf6b.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#x1EF1;c in</h3>
+                                </a>
+                                <a href="/may-in">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/24/b3/24b303278d3d03de8b3fa3a31c2a1820.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>M&#xE1;y in</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="has-list">
+                        <a href="/sim-so-dep">
+
+                            <span class="has-child">Sim, Th&#x1EBB; c&#xE0;o</span>
+                        </a>
+                        <div class="navmwg limit-width">
+                            <div class="item-child no-child-final">
+                                <a href="/sim-so-dep">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/54/96/54965e9976059f689c8905bfa5696b61.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Sim, th&#x1EBB; c&#xE0;o</h3>
+                                </a>
+                            </div>
+                            <div class="item-child no-child-final">
+                                <a href="/phan-mem-esim-du-lich">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/5a/48/5a48d18da9b8282909939cfbd156ef1a.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>eSim du l&#x1ECB;ch</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="has-list">
+                        <a href="/tien-ich/thanh-toan-tra-gop">
+
+                            <span class="has-child">D&#x1ECB;ch v&#x1EE5; ti&#x1EC7;n &#xED;ch</span>
+                        </a>
+                        <div class="navmwg ">
+                            <div class="item-child ">
+                                <strong>
+                                    Thanh to&#xE1;n h&#xF3;a &#x111;&#x1A1;n
+                                </strong>
+                                <a href="/tien-ich/thanh-toan-tra-gop">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/61/b6/61b6e80c07684c4846aeff658fdba88a.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xF3;ng ti&#x1EC1;n tr&#x1EA3; g&#xF3;p</h3>
+                                </a>
+                                <a href="/tien-ich/thanh-toan-tien-dien">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/8e/96/8e9685acf415892e991723bd885a7696.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xF3;ng ti&#x1EC1;n &#x111;i&#x1EC7;n</h3>
+                                </a>
+                                <a href="/tien-ich/thanh-toan-tien-nuoc">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/43/fb/43fb3b248d0417ac1936c21ba9c03aef.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xF3;ng ti&#x1EC1;n n&#x1B0;&#x1EDB;c</h3>
+                                </a>
+                                <a href="/tien-ich/thanh-toan-internet-fpt">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/09/93/099365b9fef8ff95bd19d85d84f528bc.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xF3;ng ti&#x1EC1;n NET FPT</h3>
+                                </a>
+                                <a href="/tien-ich/thanh-toan-internet-vnpt">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/d0/6c/d06c8a333e6bb746786858b56d8881cd.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xF3;ng ti&#x1EC1;n net, c&#xE1;p VNPT</h3>
+                                </a>
+                                <a href="/tien-ich/thanh-toan-ve-tau-xe">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/9c/79/9c79d46ccb9d986fccb55182de2f1c4c.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Thu v&#xE9; t&#xE0;u, xe, m&#xE1;y bay</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    B&#x1EA3;o h&#xE0;nh - B&#x1EA3;o hi&#x1EC3;m
+                                </strong>
+                                <a href="/tien-ich/bao-hiem-o-to-xe-may">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/38/7a/387aa99478d8e608e234bb979b8835f9.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#x1EA3;o hi&#x1EC3;m xe m&#xE1;y - &#xD4; t&#xF4;</h3>
+                                </a>
+                                <a href="/tin-tuc/mua-bhyt-va-bhxh-tu-nguyen-den-ngay-tgdd-1569486">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/35/21/3521d9122915926b55c27bf8a44f80bd.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#xF3;ng BHYT- BHXH</h3>
+                                </a>
+                                <a href="/tin-tuc/vay-tien-mat-tren-app-qua-tang-vip-han-muc-den-50-trieu-1587743">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/31/38/313842967f3eb51dca294a6af3d36e2e.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Vay ti&#x1EC1;n m&#x1EB7;t CAKE</h3>
+                                </a>
+                                <a href="/tin-tuc/vay-tieu-dung-qua-app-ngan-hang-cathay-united-bank-1570518">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/f9/a7/f9a7165adf02fa6ab3549395dfae0812.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Vay ti&#x1EC1;n m&#x1EB7;t CATHAY</h3>
+                                </a>
+                                <a
+                                    href="/tin-tuc/tat-tan-tat-ve-chinh-sach-bao-hiem-roi-vo-bao-hanh-mo-rong-bao-hanh-1-doi-1-tai-tgdd-1567763#hmenuid1:~:text=%C4%91%C3%A3i%20%C4%91%E1%BA%B7c%20bi%E1%BB%87t!-,B%E1%BA%A3o%20hi%E1%BB%83m%20r%C6%A1i%20v%E1%BB%A1,-1.%20S%E1%BA%A3n%20ph%E1%BA%A9m">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/50/35/5035a1e6cb76425d7cd748f81481b567.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#x1EA3;o h&#xE0;nh r&#x1A1;i v&#x1EE1;</h3>
+                                </a>
+                                <a
+                                    href="/tin-tuc/tat-tan-tat-ve-chinh-sach-bao-hiem-roi-vo-bao-hanh-mo-rong-bao-hanh-1-doi-1-tai-tgdd-1567763#hmenuid1:~:text=7%20%26%20ch%E1%BB%A7%20nh%E1%BA%ADt).-,B%E1%BA%A3o%20h%C3%A0nh%20m%E1%BB%9F%20r%E1%BB%99ng,-1.%20S%E1%BA%A3n%20ph%E1%BA%A9m">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/cc/53/cc53c60cef74387bb822863b59f20f53.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#x1EA3;o h&#xE0;nh m&#x1EDF; r&#x1ED9;ng</h3>
+                                </a>
+                                <a
+                                    href="/tin-tuc/tat-tan-tat-ve-chinh-sach-bao-hiem-roi-vo-bao-hanh-mo-rong-bao-hanh-1-doi-1-tai-tgdd-1567763#hmenuid1:~:text=7%20%26%20ch%E1%BB%A7%20nh%E1%BA%ADt).-,B%E1%BA%A3o%20h%C3%A0nh%201%20%C4%91%E1%BB%95i%201,-1.%20S%E1%BA%A3n%20ph%E1%BA%A9m">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/31/4f/314fcd2f5d051e956671fc69d86547ed.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>B&#x1EA3;o h&#xE0;nh 1 &#x111;&#x1ED5;i 1</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Ti&#x1EC7;n &#xED;ch vi&#x1EC5;n th&#xF4;ng
+                                </strong>
+                                <a href="/tien-ich/goi-cuoc-data">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/34/92/349219728cb261aa4355e65b8eb600f8.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Mua g&#xF3;i data 3G, 4G</h3>
+                                </a>
+                                <a href="/tien-ich/nap-tien-dien-thoai">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/f5/c7/f5c7e0f1d65e60f1b832eddcbc8dc2ad.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>N&#x1EA1;p ti&#x1EC1;n tr&#x1EA3; tr&#x1B0;&#x1EDB;c</h3>
+                                </a>
+                                <a href="/tien-ich/nap-tien-dien-thoai-tra-sau">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/fe/34/fe34312d302d489162e7bae030515363.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>N&#x1EA1;p ti&#x1EC1;n tr&#x1EA3; sau</h3>
+                                </a>
+                                <a href="/tien-ich/the-cao-game">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/b2/13/b2135863df0735405d466c06222b45ab.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Th&#x1EBB; c&#xE0;o game</h3>
+                                </a>
+                                <a href="/tien-ich/the-cao-dien-thoai">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/common/Common/d1/4b/d14bc733f4e33f0299e0041668493f1d.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>Th&#x1EBB; c&#xE0;o &#x111;i&#x1EC7;n tho&#x1EA1;i</h3>
+                                </a>
+                            </div>
+                            <div class="item-child ">
+                                <strong>
+                                    Ti&#x1EC7;n &#xED;ch kh&#xE1;c
+                                </strong>
+                                <a href="/dat-ve-may-bay">
+                                    <img class="lazy-menu"
+                                        data-src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Common/00/72/0072d5344481e8f27a3f7dc0d3037a04.png"
+                                        alt="thumb menu" width="25px" />
+                                    <h3>&#x110;&#x1EB7;t v&#xE9; m&#xE1;y bay</h3>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <div class="header-overlay">
+        <div><a href="javascript:;">X</a></div>
+    </div>
+
+
+    <div class="header-mask"></div>
+
+    <div class="container">
+        <!-- Back Button -->
+        <div class="top-nav">
+            <a href="/"><i class="fa-solid fa-chevron-left"></i> Quay lại</a>
+        </div>
+
+        <div id="cart-content">
+            <!-- Content will be rendered by JS -->
+        </div>
+    </div>
+
+    <script>
+        const CART_KEY = 'tgdd_cart';
+
+        function getCart() {
+            return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            renderCart();
+        }
+
+        function formatCurrency(amount) {
+            if (!amount) return "0₫";
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        function updateQuantity(id, delta) {
+            let cart = getCart();
+            let item = cart.find(i => i.id == id);
+            if (item) {
+                item.quantity = Math.max(1, item.quantity + delta);
+                saveCart(cart);
+            }
+        }
+
+        function removeItem(id) {
+            if (confirm('Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                let cart = getCart().filter(i => i.id != id);
+                saveCart(cart);
+            }
+        }
+
+        function renderCart() {
+            const cart = getCart();
+            const container = document.getElementById('cart-content');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fa-solid fa-cart-flatbed"></i>
+                        <h2>Giỏ hàng của bạn đang trống</h2>
+                        <p>Hãy chọn thêm sản phẩm để tiếp tục mua sắm nhé!</p>
+                        <a href="/" class="btn-home">Về trang chủ</a>
+                    </div>`;
+                return;
+            }
+
+            let total = 0;
+            let totalQty = 0;
+            let productHtml = cart.map(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                totalQty += item.quantity;
+                return `
+                    <div class="product-item">
+                        <img src="${item.image}" class="product-img" alt="${item.name}">
+                        <div class="product-detail">
+                            <h3 class="product-name">${item.name}</h3>
+                            <span class="product-variant">Màu: Ngẫu nhiên</span>
+                            <div class="promo-tag">
+                                Nhập mã VNPAY0126 giảm tối đa 100.000đ khi thanh toán qua VNPAY-QR <a href="#">(Xem chi tiết)</a>
+                            </div>
+                            <div class="cart-actions">
+                                <span class="btn-remove" onclick="removeItem(${item.id})">Xoá</span>
+                                <div class="quantity-control">
+                                    <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price-group">
+                            <span class="price-current">${formatCurrency(item.price)}</span>
+                            ${item.oldPrice ? `<span class="price-old">${formatCurrency(item.oldPrice)}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Tabs -->
+                <div class="delivery-tabs">
+                    <div class="tab active"><i class="fa-solid fa-truck-fast"></i> Giao tận nơi</div>
+                    <div class="tab"><i class="fa-solid fa-shop"></i> Nhận tại siêu thị</div>
+                </div>
+
+                <!-- Customer Info -->
+                <div class="section-box">
+                    <div class="customer-info">
+                        <div>
+                            <span class="title">Người nhận: Anh Ngô Gia Phương</span>
+                            <span class="sub-title">Vui lòng cung cấp thông tin nhận hàng</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="color:#ccc"></i>
+                    </div>
+                </div>
+
+                <!-- Products -->
+                <div class="section-box">
+                    ${productHtml}
+                    <div class="summary-row" style="margin-top:20px">
+                        <span>Tạm tính (${totalQty} sản phẩm):</span>
+                        <span style="font-weight:bold">${formatCurrency(total)}</span>
+                    </div>
+                </div>
+
+                <!-- Special Requests -->
+                <div class="section-box">
+                    <h4 class="section-title">Yêu cầu đặc biệt</h4>
+                    <div class="option-item">
+                        <input type="checkbox" id="hd"> <label for="hd">Hướng dẫn sử dụng, giải đáp thắc mắc</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="hdct"> <label for="hdct">Xuất hóa đơn công ty</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="checkbox" id="yck"> <label for="yck">Yêu cầu khác</label>
+                    </div>
+                </div>
+
+                <!-- Rewards & Total -->
+                <div class="section-box">
+                    <div class="discount-selector" style="display:flex; justify-content:space-between; color:var(--primary-blue); margin-bottom:15px; font-size:14px; cursor:pointer;">
+                        <span><i class="fa-solid fa-ticket"></i> Chọn hoặc nhập mã giảm</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                    <div class="switch-container">
+                        <span style="font-size:14px"><i class="fa-solid fa-medal" style="color:#ffd400"></i> Dùng điểm Quà Tặng VIP</span>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="total-row summary-row">
+                        <span>Tổng tiền</span>
+                        <span style="color:#d0021b; font-size:19px">${formatCurrency(total)}</span>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="section-box" style="border-bottom:none; padding-bottom:40px;">
+                    <h4 class="section-title">Hình thức thanh toán</h4>
+                    <div class="payment-item">
+                        <input type="radio" name="payment" id="pay1" checked>
+                        <div class="payment-info">
+                            <label for="pay1"><i class="fa-solid fa-wallet" style="color:#f37021"></i> Qua ví MWG Paylater <a href="#" style="color:var(--primary-blue); margin-left:5px">Đăng ký ngay</a></label>
+                            <p>(Lãi suất 0%, trả góp dễ dàng)</p>
+                        </div>
+                    </div>
+                    <div class="payment-item">
+                        <input type="radio" name="payment" id="pay2">
+                        <div class="payment-info">
+                            <label for="pay2"><i class="fa-solid fa-building-columns" style="color:var(--primary-blue)"></i> Chuyển khoản ngân hàng</label>
+                        </div>
+                    </div>
+                    <div class="payment-item">
+                        <input type="radio" name="payment" id="pay3">
+                        <div class="payment-info">
+                            <label for="pay3"><i class="fa-solid fa-hand-holding-dollar" style="color:#4caf50"></i> Thanh toán khi nhận hàng (COD)</label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:25px; font-size:13px; color:#666; display:flex; align-items:flex-start;">
+                        <input type="checkbox" checked style="margin-right:8px; margin-top:2px">
+                        <span>Tôi đồng ý với <a href="#" style="color:var(--primary-blue); text-decoration:none">Chính sách xử lý dữ liệu cá nhân</a> của Thế Giới Di Động</span>
+                    </div>
+                </div>
+
+                <!-- Fixed Footer -->
+                <div class="bottom-bar">
+                    <button class="btn-submit" onclick="submitOrder()">Đặt hàng</button>
+                    <p style="text-align:center; font-size:11px; color:#999;">Bạn có thể chọn hình thức thanh toán ở bước tiếp theo</p>
+                </div>
+            `;
+        }
+
+        async function submitOrder() {
+            const cart = getCart();
+            if (cart.length === 0) {
+                alert('Giỏ hàng trống!');
+                return;
+            }
+
+            // Prepare order data
+            const orderData = {
+                customerName: "Ngô Gia Phương", // In real app, get from form
+                customerEmail: "phuong@example.com",
+                customerPhone: "0123456789",
+                shippingAddress: "TP. Hồ Chí Minh",
+                products: cart.map(item => ({ id: item.id })), // Just send IDs for ManyToMany
+                status: 'PENDING'
+            };
+
+            try {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    alert('Đặt hàng thành công! Cảm ơn bạn đã mua sắm.');
+                    localStorage.removeItem(CART_KEY);
+                    window.location.href = '/';
+                } else {
+                    const err = await response.json();
+                    alert('Lỗi khi đặt hàng: ' + (err.message || 'Vui lòng thử lại sau.'));
+                }
+            } catch (error) {
+                console.error('Order error:', error);
+                alert('Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại.');
+            }
+        }
+
+        // Initial render
+        renderCart();
+    </script>
+</body>
+
+</html>
+
