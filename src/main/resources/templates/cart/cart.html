@@ -579,8 +579,8 @@
                     <div class="payment-item">
                         <input type="radio" name="payment" id="pay1" checked>
                         <div class="payment-info">
-                            <label for="pay1"><i class="fa-solid fa-wallet" style="color:#f37021"></i> Qua ví MWG Paylater <a href="#" style="color:var(--primary-blue); margin-left:5px">Đăng ký ngay</a></label>
-                            <p>(Lãi suất 0%, trả góp dễ dàng)</p>
+                            <label for="pay1"><i class="fa-solid fa-wallet" style="color:#d82d8b"></i> Qua ví điện tử MoMo</label>
+                            <p>(Quét mã QR, an toàn, tiện lợi)</p>
                         </div>
                     </div>
                     <div class="payment-item">
@@ -613,6 +613,32 @@
         function submitOrder() {
             const cart = getCart();
             if (cart.length === 0) return;
+
+            let momoSelected = document.getElementById('pay1').checked;
+            let total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+            if (momoSelected) {
+                let form = document.createElement("form");
+                form.method = "POST";
+                form.action = "/momo/create";
+
+                let amountInput = document.createElement("input");
+                amountInput.type = "hidden";
+                amountInput.name = "amount";
+                amountInput.value = total;
+                form.appendChild(amountInput);
+
+                let infoInput = document.createElement("input");
+                infoInput.type = "hidden";
+                infoInput.name = "orderInfo";
+                infoInput.value = "Thanh toán đơn hàng Giỏ hàng TGDĐ";
+                form.appendChild(infoInput);
+
+                document.body.appendChild(form);
+                form.submit();
+                localStorage.removeItem(CART_KEY);
+                return;
+            }
 
             alert('Đoàn kết là sức mạnh! Đơn hàng của bạn đang được khởi tạo...');
             // In real app, send to server here
