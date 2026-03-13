@@ -54,43 +54,49 @@ public class MomoController {
     }
 
     @PostMapping("/create")
-    public RedirectView createMomoPayment(@RequestParam("amount") long amount, 
+    public String createMomoPayment(@RequestParam("amount") long amount, 
                                           @RequestParam("orderInfo") String orderInfo,
                                           @RequestParam(value="customerName", defaultValue="Khách hàng") String customerName,
-                                          @RequestParam(value="productIds", required=false) List<Long> productIds) throws Exception {
-        Order order = new Order();
-        order.setCustomerName(customerName);
-        order.setCustomerEmail("momo_customer@example.com"); // Placeholder or get from session
-        order.setCustomerPhone("0000000000"); // Placeholder
-        order.setShippingAddress("Thanh toán MoMo");
-        order.setStatus(OrderStatus.PENDING);
-        
-        if (productIds != null && !productIds.isEmpty()) {
-            List<Product> products = new ArrayList<>();
-            for (Long id : productIds) {
-                Product p = new Product();
-                p.setId(id);
-                products.add(p);
+                                          @RequestParam(value="productIds", required=false) List<Long> productIds,
+                                          Model model) {
+        try {
+            Order order = new Order();
+            order.setCustomerName(customerName);
+            order.setCustomerEmail("momo_customer@example.com"); // Placeholder or get from session
+            order.setCustomerPhone("0000000000"); // Placeholder
+            order.setShippingAddress("Thanh toán MoMo");
+            order.setStatus(OrderStatus.PENDING);
+            
+            if (productIds != null && !productIds.isEmpty()) {
+                List<Product> products = new ArrayList<>();
+                for (Long id : productIds) {
+                    Product p = new Product();
+                    p.setId(id);
+                    products.add(p);
+                }
+                order.setProducts(products);
             }
-            order.setProducts(products);
+            
+            // Use orderService to handle calculations and stock
+            order = orderService.placeOrder(order);
+
+            LogUtils.init();
+            Environment environment = Environment.selectEnv("dev");
+            String requestId = String.valueOf(System.currentTimeMillis());
+            String momoOrderId = order.getId() + "_" + System.currentTimeMillis();
+            long finalAmount = (long) order.getTotalAmount();
+            String returnURL = "http://localhost:8080/momo/return";
+            String notifyURL = "http://localhost:8080/momo/notify";
+
+            PaymentResponse captureWalletMoMoResponse = CreateOrderMoMo.process(
+                    environment, momoOrderId, requestId, Long.toString(finalAmount),
+                    orderInfo, returnURL, notifyURL, "", RequestType.CAPTURE_WALLET, Boolean.TRUE);
+
+            return "redirect:" + captureWalletMoMoResponse.getPayUrl();
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "cart/cart_error"; // We should create this view or handle it in cart.html
         }
-        
-        // Use orderService to handle calculations and stock
-        order = orderService.placeOrder(order);
-
-        LogUtils.init();
-        Environment environment = Environment.selectEnv("dev");
-        String requestId = String.valueOf(System.currentTimeMillis());
-        String momoOrderId = order.getId() + "_" + System.currentTimeMillis();
-        long finalAmount = (long) order.getTotalAmount();
-        String returnURL = "http://localhost:8080/momo/return";
-        String notifyURL = "http://localhost:8080/momo/notify";
-
-        PaymentResponse captureWalletMoMoResponse = CreateOrderMoMo.process(
-                environment, momoOrderId, requestId, Long.toString(finalAmount),
-                orderInfo, returnURL, notifyURL, "", RequestType.CAPTURE_WALLET, Boolean.TRUE);
-
-        return new RedirectView(captureWalletMoMoResponse.getPayUrl());
     }
 
     @GetMapping("/return")

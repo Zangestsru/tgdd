@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lỗi đặt hàng - Thegioididong</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: #f4f4f4; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .error-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
+        .error-icon { color: #f44336; font-size: 64px; margin-bottom: 20px; }
+        h1 { margin: 0 0 10px; color: #333; font-size: 24px; }
+        p { color: #666; font-size: 16px; line-height: 1.5; margin-bottom: 30px; }
+        .btn { background: #ff9f00; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; text-decoration: none; display: inline-block; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #e68f00; }
+    </style>
+</head>
+<body>
+    <div class="error-card">
+        <div class="error-icon">⚠️</div>
+        <h1>Lỗi Đặt Hàng</h1>
+        <p th:text="${error}">Đã có lỗi xảy ra trong quá trình xử lý đơn hàng của bạn.</p>
+        <a href="/cart" class="btn">Quay lại Giỏ hàng</a>
+    </div>
+</body>
+</html>

@@ -38,17 +38,19 @@ public class OrderService {
             productsFromDb.add(dbProduct);
             subtotal += dbProduct.getPrice();
 
-            // Flash sale logic: decrement quantity
+            // Flash sale logic: check and decrement quantity
             if (Boolean.TRUE.equals(dbProduct.getPromotion())) {
                 int currentQty = dbProduct.getFlashSaleQuantity() != null ? dbProduct.getFlashSaleQuantity() : 0;
-                if (currentQty > 0) {
-                    dbProduct.setFlashSaleQuantity(currentQty - 1);
-                    // If stock reaches 0, remove from flash sale
-                    if (dbProduct.getFlashSaleQuantity() == 0) {
-                        dbProduct.setPromotion(false);
-                    }
-                    productRepository.save(dbProduct);
+                if (currentQty <= 0) {
+                    throw new RuntimeException("Sản phẩm '" + dbProduct.getName() + "' đã hết suất Flash Sale!");
                 }
+                
+                dbProduct.setFlashSaleQuantity(currentQty - 1);
+                // If stock reaches 0, remove from flash sale
+                if (dbProduct.getFlashSaleQuantity() == 0) {
+                    dbProduct.setPromotion(false);
+                }
+                productRepository.save(dbProduct);
             }
         }
 
