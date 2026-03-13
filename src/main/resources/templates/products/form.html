@@ -123,6 +123,13 @@
                                 </label>
                             </div>
 
+                            <div class="mb-3" id="flashSaleQtyDiv">
+                                <label class="form-label fw-semibold">Số lượng Flash Sale</label>
+                                <input type="number" class="form-control" th:field="*{flashSaleQuantity}" 
+                                    placeholder="Nhập số lượng flash sale" min="0">
+                                <small class="text-muted">Khi số lượng này về 0, sản phẩm sẽ tự động rời khỏi mục Flash Sale.</small>
+                            </div>
+
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg">
                                     <i class="bi bi-check-circle"></i> Lưu sản phẩm
