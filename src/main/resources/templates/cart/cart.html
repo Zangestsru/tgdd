@@ -1585,6 +1585,18 @@
                 `;
             }).join('');
 
+            // Pricing logic
+            let shippingFee = 0;
+            let earnedPoints = 0;
+            if (total >= 1000000 && totalQty >= 2) {
+                shippingFee = 0;
+                earnedPoints = 0;
+            } else {
+                shippingFee = 30000;
+                earnedPoints = 1;
+            }
+            const finalTotal = total + shippingFee;
+
             container.innerHTML = `
                 <!-- Tabs -->
                 <div class="delivery-tabs">
@@ -1606,10 +1618,19 @@
                 <!-- Products -->
                 <div class="section-box">
                     ${productHtml}
-                    <div class="summary-row" style="margin-top:20px">
+                    <div class="summary-row" style="margin-top:20px; color: #666; font-size: 14px;">
                         <span>Tạm tính (${totalQty} sản phẩm):</span>
-                        <span style="font-weight:bold">${formatCurrency(total)}</span>
+                        <span>${formatCurrency(total)}</span>
                     </div>
+                    <div class="summary-row" style="margin-top:10px; color: #666; font-size: 14px;">
+                        <span>Phí vận chuyển:</span>
+                        <span style="${shippingFee === 0 ? 'color: #4caf50; font-weight: bold;' : ''}">${shippingFee === 0 ? 'Miễn phí' : formatCurrency(shippingFee)}</span>
+                    </div>
+                    ${earnedPoints > 0 ? `
+                    <div class="summary-row" style="margin-top:10px; color: #fb6e2e; font-size: 14px;">
+                        <span>Điểm thưởng tích lũy (VIP):</span>
+                        <span>+${earnedPoints} điểm</span>
+                    </div>` : ''}
                 </div>
 
                 <!-- Special Requests -->
@@ -1633,7 +1654,7 @@
                         <i class="fa-solid fa-chevron-right"></i>
                     </div>
                     <div class="switch-container">
-                        <span style="font-size:14px"><i class="fa-solid fa-medal" style="color:#ffd400"></i> Dùng điểm Quà Tặng VIP</span>
+                        <span style="font-size:14px"><i class="fa-solid fa-medal" style="color:#ffd400"></i> Dùng điểm Quà Tặng VIP (2đ = 15k)</span>
                         <label class="switch">
                             <input type="checkbox">
                             <span class="slider"></span>
@@ -1641,7 +1662,10 @@
                     </div>
                     <div class="total-row summary-row">
                         <span>Tổng tiền</span>
-                        <span style="color:#d0021b; font-size:19px">${formatCurrency(total)}</span>
+                        <div style="text-align: right">
+                            <span style="color:#d0021b; font-size:19px; display: block">${formatCurrency(finalTotal)}</span>
+                            <small style="color: #999; font-size: 11px;">(Đã bao gồm VAT nếu có)</small>
+                        </div>
                     </div>
                 </div>
 
@@ -1695,7 +1719,7 @@
                 customerEmail: "phuong@example.com",
                 customerPhone: "0123456789",
                 shippingAddress: "TP. Hồ Chí Minh",
-                products: cart.map(item => ({ id: item.id })), // Just send IDs for ManyToMany
+                products: cart.flatMap(item => Array(item.quantity).fill({ id: item.id })), // Just send IDs for ManyToMany
                 status: 'PENDING'
             };
 
