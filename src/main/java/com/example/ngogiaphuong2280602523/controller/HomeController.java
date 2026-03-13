@@ -1,4 +1,4 @@
-﻿package com.example.ngogiaphuong2280602523.controller;
+package com.example.ngogiaphuong2280602523.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

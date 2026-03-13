@@ -1,4 +1,4 @@
-﻿package com.example.ngogiaphuong2280602523.model;
+package com.example.ngogiaphuong2280602523.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

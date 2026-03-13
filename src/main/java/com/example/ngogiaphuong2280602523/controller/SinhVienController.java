@@ -1,4 +1,4 @@
-﻿package com.example.ngogiaphuong2280602523.controller;
+package com.example.ngogiaphuong2280602523.controller;
 
 
 import com.example.ngogiaphuong2280602523.model.SinhVien;

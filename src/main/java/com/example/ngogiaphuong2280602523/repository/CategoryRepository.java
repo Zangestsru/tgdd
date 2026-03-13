@@ -1,4 +1,4 @@
-﻿package com.example.ngogiaphuong2280602523.repository;
+package com.example.ngogiaphuong2280602523.repository;
 
 import com.example.ngogiaphuong2280602523.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
