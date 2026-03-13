@@ -20559,8 +20559,14 @@ body-theme-lunaryear
                     <div id="search-result"></div>
                 </form>
                 <div class="profile">
-                    <a href="/lich-su-mua-hang" class="name-order active">
-                        <i></i> Đăng nhập
+                    <a th:if="${session.user == null}" href="/login" class="name-order active" style="padding: 0 5px;">
+                        <i></i> Đăng nhập / Đăng ký
+                    </a>
+                    <a th:if="${session.user != null}" href="/profile" class="name-order active" style="padding: 0 5px;">
+                        <i></i> <span th:text="${session.user.username}">Tài khoản</span>
+                    </a>
+                    <a th:if="${session.user != null}" href="/logout" class="name-order active" style="padding: 0 5px; margin-left: 5px;">
+                        Thoát
                     </a>
                 </div>
                 <a href="/cart" class="header__cart menu-info" id="cart-box">
