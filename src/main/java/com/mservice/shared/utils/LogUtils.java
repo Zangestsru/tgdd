@@ -1,42 +1,32 @@
 package com.mservice.shared.utils;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.Logger;
-
-
-
-/***
- * @author uyen.tran
+/**
+ * Simplified LogUtils to avoid missing log4j dependencies
  */
 public class LogUtils {
-     static Logger logger;
-
-    public static void init(){
-        logger = Logger.getLogger(LogUtils.class);
-        BasicConfigurator.configure();
+    
+    public static void init() {
+        // No-op or use System.out
+        System.out.println("[MoMo] Logger initialized (Simplified)");
     }
 
-    public static void info(String serviceCode, Object object){
-        logger.info(new StringBuilder().append("[").append(serviceCode).append("]: ").append(object));
-    }
-    public static void info(Object object){
-        logger.info(object);
+    public static void info(String serviceCode, Object object) {
+        System.out.println("[MoMo INFO] [" + serviceCode + "]: " + object);
     }
 
-    public static void debug(Object object){
-        logger.debug(object);
+    public static void info(Object object) {
+        System.out.println("[MoMo INFO] " + object);
     }
 
-    public static void error(Object object){
-        logger.error(object);
+    public static void debug(Object object) {
+        System.out.println("[MoMo DEBUG] " + object);
     }
 
-//    public static void error(Object object) {
-//        logger.error(object);
-//    }
+    public static void error(Object object) {
+        System.err.println("[MoMo ERROR] " + object);
+    }
 
-    public static void warn(Object object){
-        logger.warn(object);
+    public static void warn(Object object) {
+        System.out.println("[MoMo WARN] " + object);
     }
 }
